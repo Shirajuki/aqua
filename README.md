@@ -2,7 +2,7 @@
 <p>
   <a href="https://azurlane.koumakan.jp/File:Minato_Aqua.png" style="color: gray; font-size: 10px;text-decoration: none">Illustration from Azur Lane Wiki</a>
 </p>
-<h1 align="center">Aqua</h1>
+<h1 align="center">Aqua ⚓</h1>
 
 <p align="center">
   <a href="https://github.com/Shirajuki/aqua/blob/main/LICENSE" alt="LICENSE">
