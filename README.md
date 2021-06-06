@@ -1,4 +1,4 @@
-<p align="center"><img src="https://azurlane.koumakan.jp/w/images/f/f8/Minato_Aqua.png" alt="Minato_Aqua" height="400" /></p>
+<p align="center"><img src="./Minato_Aqua.png" alt="Minato_Aqua" height="400" /></p>
 <p>
   <a href="https://azurlane.koumakan.jp/File:Minato_Aqua.png" style="color: gray; font-size: 10px;text-decoration: none">Illustration from Azur Lane Wiki</a>
 </p>
