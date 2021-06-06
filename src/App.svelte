@@ -37,8 +37,8 @@
 	onMount(() => {
 		const ctx = canvas.getContext('2d');
 		let frame; // AnimationFrame cancel on unmount / exit
-		let secondsPassed, oldTimeStamp, fps; // FPS
-		const gameLoop = (timeStamp) => {
+		let secondsPassed: number, oldTimeStamp: number, fps: number; // FPS
+		const gameLoop = (timeStamp: number) => {
 			frame = requestAnimationFrame(gameLoop);
 			// Calculate the number of seconds passed since the last frame
 			secondsPassed = (timeStamp - oldTimeStamp) / 1000;
