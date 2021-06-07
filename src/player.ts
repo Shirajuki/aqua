@@ -1,25 +1,37 @@
 import Animal from './animal';
-import Bullet from './bullets';
+import Bullet from './bullet';
 
 class Player extends Animal {
   height = this.width;
   movement = { left: false, up: false, right: false, down: false };
   shooting = true;
-  velocity = 6;
+  focusing = false;
+  velocity: number[] = [6, 3]; // [normal, slow]
   bullets: Bullet[] = [];
   cooldown = {
     shootingCur: 0,
     shootingMax: 5,
   };
   move() {
-    if (this.movement.left) this.x -= this.velocity;
-    if (this.movement.up) this.y -= this.velocity;
-    if (this.movement.right) this.x += this.velocity;
-    if (this.movement.down) this.y += this.velocity;
+    const i = this.focusing ? 1 : 0;
+    if (this.movement.left) this.x -= this.velocity[i];
+    if (this.movement.up) this.y -= this.velocity[i];
+    if (this.movement.right) this.x += this.velocity[i];
+    if (this.movement.down) this.y += this.velocity[i];
   }
   shoot() {
     if (this.cooldown.shootingCur >= this.cooldown.shootingMax) {
-      this.bullets.push(new Bullet(this.x, this.y, 10, 10, 'blue'));
+      this.bullets.push(
+        new Bullet(
+          this.x,
+          this.y + this.height + 5,
+          8,
+          8,
+          'blue',
+          [8, 0],
+          [0, 0]
+        )
+      );
       this.cooldown.shootingCur = 0;
     } else this.cooldown.shootingCur++;
   }
@@ -31,12 +43,18 @@ class Player extends Animal {
 
     ctx.beginPath();
     ctx.fillStyle = 'blue';
-    ctx.arc(this.x + this.width * 2, this.y + this.height * 2, this.width, 0, 2 * Math.PI);
+    ctx.arc(
+      this.x + this.width * 2,
+      this.y + this.height * 2,
+      this.width,
+      0,
+      2 * Math.PI
+    );
     ctx.fill();
   }
   logic(ctx: any) {
     if (this.shooting) this.shoot();
-    for (let i = 0; i < this.bullets.length; i++) {
+    for (let i = this.bullets.length - 1; i >= 0; i--) {
       const bullet = this.bullets[i];
       bullet.move();
       bullet.draw(ctx);

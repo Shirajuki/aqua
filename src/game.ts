@@ -1,5 +1,5 @@
 import Player from './player';
-import type Bullet from './bullets';
+import type Bullet from './bullet';
 
 class Game {
   state: number;

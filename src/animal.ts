@@ -1,10 +1,16 @@
-class Animal {
+export default class Animal {
   x: number;
   y: number;
   width: number;
   height: number;
   color: string;
-  constructor(x: number, y: number, width: number, height: number, color: string) {
+  constructor(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    color: string
+  ) {
     this.x = x;
     this.y = y;
     this.width = width;
@@ -18,4 +24,3 @@ class Animal {
     ctx.fill();
   }
 }
-export default Animal;

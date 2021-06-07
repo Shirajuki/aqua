@@ -1,9 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Game from './game';
+	import Enemy from "./enemy";
+
 	let canvas: any;
 	const game = new Game();
 	const player = game.player;
+	let boss = new Enemy(900,300,50,50,"black",game.bullets);
 	(window as any).game = game;
 	onMount(() => {
 		const ctx = canvas.getContext('2d');
@@ -24,7 +27,15 @@
 				ctx.font = '25px Arial';
 				ctx.fillStyle = 'black';
 				ctx.fillText('FPS: ' + fps, canvas.width - 100, canvas.height - 10);
-
+				
+				// Game bullets
+				for (let i = game.bullets.length-1; i >= 0; i--) {
+					const bullet = game.bullets[i];
+					bullet.move();
+					bullet.draw(ctx);
+					if (bullet.outOfRange) game.bullets.splice(i, 1);
+				}
+				boss.logic(ctx);
 				// Player movement
 				player.logic(ctx);
 			}
@@ -41,7 +52,8 @@
 		else if (event.key === 'ArrowLeft') player.movement.left = true;
 		else if (event.key === 'ArrowDown') player.movement.down = true;
 		else if (event.key === 's') player.shooting = true;
-		event.preventDefault();
+		else if (event.key === 'Shift') player.focusing = true;
+		// event.preventDefault();
 	};
 	document.onkeyup = (event) => {
 		if (event.key === 'ArrowRight') player.movement.right = false;
@@ -49,6 +61,7 @@
 		else if (event.key === 'ArrowLeft') player.movement.left = false;
 		else if (event.key === 'ArrowDown') player.movement.down = false;
 		else if (event.key === 's') player.shooting = false;
+		else if (event.key === 'Shift') player.focusing = false;
 		event.preventDefault();
 	};
 </script>
