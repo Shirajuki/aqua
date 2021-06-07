@@ -16,10 +16,12 @@
 A Work In Progress Touhou, Azur Lane and Harmful Park inspired danmaku JS horizontal scrolling 2D shooting game ⚓
 
 ## Built With
-- JavaScript
+- JavaScript / TypeScript
+- Svelte framework
 - HTML5
 - CSS3
 - LocalStorage API
+- Service Workers (PWA)
 
 ## License
 
