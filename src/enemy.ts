@@ -8,6 +8,11 @@ import {
   way20TurnLeft,
   way20,
   way30,
+  spiralHowl,
+  spiralHowlInward,
+  spread5,
+  spread8,
+  spread5Reverse,
 } from './bulletPatterns';
 
 export default class Enemy extends Animal {
@@ -41,7 +46,7 @@ export default class Enemy extends Animal {
     super(x, y, width, height, color);
     this.bullets = bullets;
     // Bullet Pattern
-    const { cooldown, pattern } = way30;
+    const { cooldown, pattern } = spread5Reverse;
     this.cooldown = cooldown;
     this.pattern = pattern;
   }
