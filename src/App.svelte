@@ -1,42 +1,13 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-
-	class Animal {
-		x: number;
-		y: number;
-		width: number;
-		height: number;
-		color: string;
-		constructor(x:number, y:number, width:number, height:number, color:string) {
-			this.x = x;
-			this.y = y;
-			this.width = width;
-			this.height = height;
-			this.color = color;
-		}
-		draw(ctx) {
-			ctx.beginPath();
-			ctx.fillStyle = this.color;
-			ctx.rect(this.x, this.y, this.width, this.height);
-			ctx.fill();
-
-			ctx.beginPath();
-			ctx.arc(this.x, this.y, this.width / 2, 0, 2 * Math.PI);
-			ctx.fill();
-		}
-	}
-	class Player extends Animal {
-		is_sexy = false;
-		meow() {
-			console.log('Meow!')
-		}
-	}
-	let canvas;
-	const player = new Player(100, 100, 50, 50, "red");
-
+	import Game from './game';
+	let canvas: any;
+	const game = new Game();
+	const player = game.player;
+	(window as any).game = game;
 	onMount(() => {
 		const ctx = canvas.getContext('2d');
-		let frame; // AnimationFrame cancel on unmount / exit
+		let frame: any; // AnimationFrame cancel on unmount / exit
 		let secondsPassed: number, oldTimeStamp: number, fps: number; // FPS
 		const gameLoop = (timeStamp: number) => {
 			frame = requestAnimationFrame(gameLoop);
@@ -48,18 +19,16 @@
 
 			if (ctx) {
 				ctx.clearRect(0, 0, canvas.width, canvas.height);
-				ctx.beginPath();
-				ctx.fillStyle = "#000";
-				ctx.rect(200,200,20,20);
-				ctx.fill();
 
 				// Draw number to the screen
 				ctx.font = '25px Arial';
 				ctx.fillStyle = 'black';
-				ctx.fillText("FPS: " + fps, canvas.width - 100, canvas.height - 10);
-				player.draw(ctx);
+				ctx.fillText('FPS: ' + fps, canvas.width - 100, canvas.height - 10);
+
+				// Player movement
+				player.logic(ctx);
 			}
-		}
+		};
 		requestAnimationFrame(gameLoop);
 		return () => {
 			cancelAnimationFrame(frame);
@@ -67,26 +36,29 @@
 	});
 
 	document.onkeydown = (event) => {
-		if (event.key === 'ArrowRight')
-			player.x += 10;
-		else if (event.key === 'ArrowUp')
-			player.y -= 10;
-		else if (event.key === 'ArrowLeft')
-			player.x -= 10;
-		else if (event.key === 'ArrowDown')
-			player.y += 10;
+		if (event.key === 'ArrowRight') player.movement.right = true;
+		else if (event.key === 'ArrowUp') player.movement.up = true;
+		else if (event.key === 'ArrowLeft') player.movement.left = true;
+		else if (event.key === 'ArrowDown') player.movement.down = true;
+		else if (event.key === 's') player.shooting = true;
 		event.preventDefault();
-	}
+	};
+	document.onkeyup = (event) => {
+		if (event.key === 'ArrowRight') player.movement.right = false;
+		else if (event.key === 'ArrowUp') player.movement.up = false;
+		else if (event.key === 'ArrowLeft') player.movement.left = false;
+		else if (event.key === 'ArrowDown') player.movement.down = false;
+		else if (event.key === 's') player.shooting = false;
+		event.preventDefault();
+	};
 </script>
 
-<canvas
-	bind:this={canvas}
-	width={1024}
-	height={600}
-></canvas>
+<canvas bind:this={canvas} width={1024} height={600} />
 
 <style>
-	* { box-sizing: border-box; }
+	* {
+		box-sizing: border-box;
+	}
 	canvas {
 		background-color: #eee;
 		position: absolute;
