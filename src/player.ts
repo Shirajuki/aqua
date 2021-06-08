@@ -45,30 +45,27 @@ class Player extends Animal {
   draw(ctx: any) {
     ctx.beginPath();
     ctx.fillStyle = this.color;
-    ctx.rect(this.x, this.y, this.width * 4, this.height * 4);
+    ctx.rect(
+      this.x - this.width * 2,
+      this.y - this.height * 2,
+      this.width * 4,
+      this.height * 4
+    );
     ctx.fill();
 
     ctx.beginPath();
     ctx.fillStyle = 'blue';
-    ctx.arc(
-      this.x + this.width * 2,
-      this.y + this.height * 2,
-      this.width,
-      0,
-      2 * Math.PI
-    );
+    ctx.arc(this.x, this.y, this.width, 0, 2 * Math.PI);
     ctx.fill();
   }
   logic(ctx: any) {
     if (this.shooting) this.shoot();
-    for (let i = this.bullets.length - 1; i >= 0; i--) {
-      const bullet = this.bullets[i];
-      bullet.move();
-      bullet.draw(ctx);
-      if (bullet.outOfRange) this.bullets.splice(i, 1);
-    }
     this.move();
     this.draw(ctx);
+  }
+  hit() {
+    this.color = 'white';
+    console.log(1);
   }
 }
 export default Player;
