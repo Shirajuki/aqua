@@ -1,4 +1,5 @@
 import Animal from './animal';
+import type Player from './player';
 
 export default class Bullet extends Animal {
   outOfRange = false;
@@ -68,5 +69,43 @@ export class BulletAngle extends Bullet {
     this.vx *= this.ax;
     this.velocity[0] = Math.cos(this.angleX) * this.speed;
     this.velocity[1] = Math.sin(this.angleY) * this.speed;
+  }
+}
+
+export class BulletHoming extends Bullet {
+  player: Player;
+  speed: number = -6;
+  homingTimerCur: number = 0;
+  homingTimerMax: number = 200;
+  homingIntervalCur: number = 0;
+  homingIntervalMax: number = 15;
+  constructor(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    color: string,
+    velocity: number[],
+    acceleration: number[],
+    player: Player
+  ) {
+    super(x, y, width, height, color, velocity, acceleration);
+    this.player = player;
+  }
+  draw(ctx: any) {
+    super.draw(ctx);
+    // Determine angle using atan
+    if (this.homingTimerCur <= this.homingTimerMax) {
+      if (this.homingIntervalCur >= this.homingIntervalMax) {
+        const angle = Math.atan2(
+          this.y - this.player.y - this.height,
+          this.x - this.player.x
+        );
+        this.velocity[0] = Math.cos(angle) * this.speed;
+        this.velocity[1] = Math.sin(angle) * this.speed;
+        this.homingIntervalCur = 0;
+      } else this.homingIntervalCur++;
+      this.homingTimerCur++;
+    }
   }
 }

@@ -1,5 +1,6 @@
 import Animal from './animal';
 import type Bullet from './bullet';
+import type Player from './player';
 import {
   linear,
   linearAccel,
@@ -13,20 +14,29 @@ import {
   spread5,
   spread8,
   spread5Reverse,
+  linearAim,
+  linearLockOn,
+  spread5LockOn,
+  spread8LockOn,
+  homingSimple,
 } from './bulletPatterns';
 
 export default class Enemy extends Animal {
   bullets: Bullet[];
+  player: Player;
   shooting: boolean = true;
-  pattern: (
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-    size: number,
-    cooldown: any,
-    bulletArr: Bullet[]
-  ) => void;
+  target: number[];
+  pattern: ({
+    x,
+    y,
+    width,
+    height,
+    cooldown,
+    size,
+    bulletArr,
+    player,
+    target,
+  }: IBulletPattern) => void;
   cooldown = {
     shootingCur: 0,
     shootingMax: 8, // Delay between shots
@@ -41,14 +51,18 @@ export default class Enemy extends Animal {
     width: number,
     height: number,
     color: string,
-    bullets: Bullet[]
+    bullets: Bullet[],
+    player: Player
   ) {
     super(x, y, width, height, color);
     this.bullets = bullets;
+    this.player = player;
+
     // Bullet Pattern
-    const { cooldown, pattern } = spread5Reverse;
+    const { cooldown, pattern } = homingSimple;
     this.cooldown = cooldown;
     this.pattern = pattern;
+    this.target = [this.player.x, this.player.y];
   }
   logic(ctx: any) {
     if (this.shooting) this.shoot();
@@ -56,21 +70,24 @@ export default class Enemy extends Animal {
       if (this.cooldown.burstTimeCur >= this.cooldown.BurstTimeMax) {
         this.cooldown.burstTimeCur = 0;
         this.shooting = true;
+        this.target = [this.player.x, this.player.y]; // Set target when begin shooting sequence
       } else this.cooldown.burstTimeCur++;
     }
     this.draw(ctx);
   }
   shoot() {
     if (this.cooldown.shootingCur >= this.cooldown.shootingMax) {
-      this.pattern(
-        this.x,
-        this.y,
-        this.width,
-        this.height,
-        8,
-        this.cooldown,
-        this.bullets
-      );
+      this.pattern({
+        x: this.x,
+        y: this.y,
+        width: this.width,
+        height: this.height,
+        size: 8,
+        cooldown: this.cooldown,
+        bulletArr: this.bullets,
+        player: this.player,
+        target: this.target,
+      });
       this.cooldown.shootingCur = 0;
       this.cooldown.burstCur++;
       if (this.cooldown.burstCur >= this.cooldown.burstMax) {
