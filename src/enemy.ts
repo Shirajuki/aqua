@@ -71,7 +71,7 @@ export default class Enemy extends Animal {
       const vy = Math.sin(angle) * this.speed;
       this.x += vx;
       this.y += vy;
-      if (true) {
+      if (distance < 1) {
         console.log('Arrived at destination');
         this.speed = 0;
         this.behaviourLogic.state++;
