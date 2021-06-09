@@ -24,11 +24,11 @@ export default class Animal {
     ctx.fill();
   }
   collision(other: Animal) {
-    return (
-      this.x < other.x + other.width &&
-      this.x + this.width > other.x &&
-      this.y < this.y + other.height &&
-      this.y + this.height > other.y
+    return !(
+      this.y + this.height < other.y ||
+      this.y > other.y + other.height ||
+      this.x + this.width < other.x ||
+      this.x > other.x + other.width
     );
   }
   collisionC(other: Animal) {

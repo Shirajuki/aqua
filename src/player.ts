@@ -31,9 +31,9 @@ class Player extends Animal {
       this.bullets.push(
         new Bullet(
           this.x,
-          this.y + this.height + 5,
-          8,
-          8,
+          this.y - this.width / 2 - 4,
+          16,
+          16,
           'blue',
           [8, 0],
           [0, 0]
@@ -65,6 +65,7 @@ class Player extends Animal {
   }
   hit() {
     this.color = 'white';
+    setTimeout(() => (this.color = 'red'), 500);
     console.log(1);
   }
 }
