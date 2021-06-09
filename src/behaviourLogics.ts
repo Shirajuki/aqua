@@ -38,18 +38,18 @@ export const linearLogic: IBehaviourLogic = {
   bulletTypes: [linearLockOn, spread5LockOn],
   behaviour: [
     {
-      duration: 1000,
-      path: { x: 100 },
+      duration: 400,
+      path: { x: 100, y: 300 },
       bulletType: 0,
-      shootAfter: 1000,
-      shootWhilePathing: false,
+      shootAfter: 200,
+      shootAfterPathing: true,
     },
     {
-      duration: 1000,
-      path: { y: 300 },
+      duration: 400,
+      path: { y: 400 },
       bulletType: 1,
-      shootAfter: 1000,
-      shootWhilePathing: false,
+      shootAfter: 200,
+      shootAfterPathing: false,
     },
   ],
 };

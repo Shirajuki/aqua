@@ -7,7 +7,7 @@ export default class Enemy extends Animal {
   outOfRange2: boolean = false;
   bullets: Bullet[];
   player: Player;
-  shooting: boolean = true;
+  shooting: boolean = false;
   target: number[];
   pattern: ({
     x,
@@ -28,9 +28,10 @@ export default class Enemy extends Animal {
     burstTimeCur: 0,
     BurstTimeMax: 100,
   };
-  bulletType: any;
+  bulletType: IBulletType;
   behaviourLogic: IBehaviourLogic;
   speed: number = 0;
+  arrived: boolean = false;
   constructor(
     x: number,
     y: number,
@@ -46,39 +47,77 @@ export default class Enemy extends Animal {
     this.bullets = bullets;
     this.player = player;
 
+    // Behaviour Logics s.t. movements and different attack patterns
+    this.behaviourLogic = behaviourLogic;
+
     // Bullet Pattern
-    const { cooldown, pattern } = bulletType;
+    this.bulletType = bulletType;
+    this.updateBulletType();
+  }
+  updateBulletType() {
+    const { cooldown, pattern } =
+      this.behaviourLogic?.bulletTypes[
+        this.behaviourLogic?.behaviour[this.behaviourLogic?.state]?.bulletType
+      ] || this.bulletType;
     this.cooldown = cooldown;
     this.pattern = pattern;
     this.target = [this.player.x, this.player.y];
-
-    // Behaviour Logics s.t. movements and different attack patterns
-    this.behaviourLogic = behaviourLogic;
   }
   logic(ctx: any) {
     // Behaviour logic
     const behaviour =
       this.behaviourLogic?.behaviour[this.behaviourLogic?.state];
+    // If a behaviour logic is found, follow through the logic
     if (behaviour) {
+      // Get the distance from point A to B
       const x = behaviour.path.x || this.x;
       const y = behaviour.path.y || this.y;
       const distance = Math.sqrt(
         Math.pow(x - this.x, 2) + Math.pow(y - this.y, 2)
       );
-      if (this.speed == 0) this.speed = (distance / behaviour.duration) * -1;
+      // Set the linear speed
+      if (this.speed == 0 && !this.arrived)
+        this.speed = (distance / behaviour.duration) * -1;
+      // Move through the path to point B
       const angle = Math.atan2(this.y - y, this.x - x);
       const vx = Math.cos(angle) * this.speed;
       const vy = Math.sin(angle) * this.speed;
       this.x += vx;
       this.y += vy;
-      if (distance < 1) {
-        console.log('Arrived at destination');
-        this.speed = 0;
-        this.behaviourLogic.state++;
+      // Increment state duration
+      this.behaviourLogic.stateDurationCur++;
+      // Shoot while pathing
+      if (
+        !behaviour.shootAfterPathing &&
+        this.behaviourLogic.stateDurationCur >= behaviour.shootAfter
+      )
+        this.shootingLogic();
+      if (distance < Math.abs(this.speed) || this.speed === 0) {
+        if (!this.arrived) {
+          this.arrived = true;
+          this.speed = 0;
+          this.behaviourLogic.stateDurationCur = 0;
+          this.cooldown.burstTimeCur = this.cooldown.BurstTimeMax; // Set to begin shooting at once
+        }
+        // Shoot after pathing
+        if (behaviour.shootAfterPathing) {
+          if (this.behaviourLogic.stateDurationCur >= behaviour.shootAfter)
+            this.shootingLogic();
+          else this.behaviourLogic.stateDurationCur++;
+        } else if (!this.shooting) {
+          this.updateState();
+        }
       }
+    } else {
+      // Normal shoot logic
+      this.shootingLogic();
     }
-    // Shoot logic
-    /*
+
+    // Draw enemy
+    this.draw(ctx);
+  }
+  hit() {}
+  shootingLogic() {
     if (this.shooting) this.shoot();
     else {
       if (this.cooldown.burstTimeCur >= this.cooldown.BurstTimeMax) {
@@ -87,14 +126,10 @@ export default class Enemy extends Animal {
         this.target = [this.player.x, this.player.y]; // Set target when begin shooting sequence
       } else this.cooldown.burstTimeCur++;
     }
-		*/
-
-    // Draw enemy
-    this.draw(ctx);
   }
-  hit() {}
   shoot() {
     if (this.cooldown.shootingCur >= this.cooldown.shootingMax) {
+      // Shoot using bullet pattern
       this.pattern({
         x: this.x,
         y: this.y,
@@ -111,9 +146,24 @@ export default class Enemy extends Animal {
       if (this.cooldown.burstCur >= this.cooldown.burstMax) {
         this.cooldown.burstCur = 0;
         this.shooting = false;
+        // Update behaviour state after shooting
+        if (
+          this.behaviourLogic?.state !== undefined &&
+          this.behaviourLogic?.behaviour[this.behaviourLogic?.state]
+            ?.shootAfterPathing
+        ) {
+          this.updateState();
+        }
       }
     } else {
       this.cooldown.shootingCur++;
     }
+  }
+  updateState() {
+    this.behaviourLogic.state =
+      (this.behaviourLogic.state + 1) % this.behaviourLogic.behaviour.length;
+    this.behaviourLogic.stateDurationCur = 0;
+    this.arrived = false;
+    this.updateBulletType();
   }
 }

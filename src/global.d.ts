@@ -32,7 +32,7 @@ interface IBehaviour {
   path: { x?: number; y?: number };
   bulletType: number;
   shootAfter: number;
-  shootWhilePathing: boolean;
+  shootAfterPathing: boolean;
 }
 // BehaviourLogic interface
 interface IBehaviourLogic {
