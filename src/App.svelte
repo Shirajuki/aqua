@@ -1,13 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Game from './game';
-	import Enemy from "./enemy";
-	import type Animal from "./animal";
 
 	let canvas: any;
 	const game = new Game();
 	const player = game.player;
-	let boss = new Enemy(900,300,50,50,"black",game.bullets,game.player);
 	(window as any).game = game;
 	onMount(() => {
 		const ctx = canvas.getContext('2d');
@@ -46,12 +43,20 @@
 					bullet.move();
 					bullet.draw(ctx);
 					if (bullet.outOfRange) player.bullets.splice(i, 1);
-					else if (bullet.collisionC(boss)) {
-						player.bullets.splice(i, 1);
-						// boss.hit();
+				}
+				for (let i = game.enemies.length - 1; i >= 0; i--) {
+					const enemy = game.enemies[i];
+					enemy.logic(ctx);
+					if (enemy.outOfRange2) game.enemies.splice(i, 1);
+					for (let i = player.bullets.length - 1; i >= 0; i--) {
+						const bullet = player.bullets[i];
+						if (enemy.collision(bullet)) {
+							player.bullets.splice(i, 1);
+							enemy.hit();
+						}
 					}
 				}
-				boss.logic(ctx);
+				// Enemies
 				// Player movement
 				player.logic(ctx);
 			}

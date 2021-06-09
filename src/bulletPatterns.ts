@@ -5,7 +5,7 @@ import Bullet, {
   BulletHoming,
 } from './bullet';
 
-export const linear = {
+export const linear: IBulletType = {
   cooldown: {
     shootingCur: 0,
     shootingMax: 5, // Delay between shots
@@ -29,7 +29,7 @@ export const linear = {
   },
 };
 
-export const linearAccel = {
+export const linearAccel: IBulletType = {
   cooldown: {
     shootingCur: 0,
     shootingMax: 5, // Delay between shots
@@ -53,7 +53,7 @@ export const linearAccel = {
   },
 };
 
-export const linearDecel = {
+export const linearDecel: IBulletType = {
   cooldown: {
     shootingCur: 0,
     shootingMax: 5, // Delay between shots
@@ -77,7 +77,7 @@ export const linearDecel = {
   },
 };
 
-export const way20TurnRight = {
+export const way20TurnRight: IBulletType = {
   cooldown: {
     shootingCur: 0,
     shootingMax: 8, // Delay between shots
@@ -119,7 +119,7 @@ export const way20TurnRight = {
   },
 };
 
-export const way20TurnLeft = {
+export const way20TurnLeft: IBulletType = {
   cooldown: {
     shootingCur: 0,
     shootingMax: 8, // Delay between shots
@@ -161,7 +161,7 @@ export const way20TurnLeft = {
   },
 };
 
-export const way20 = {
+export const way20: IBulletType = {
   cooldown: {
     shootingCur: 0,
     shootingMax: 8, // Delay between shots
@@ -194,7 +194,7 @@ export const way20 = {
   },
 };
 
-export const way30 = {
+export const way30: IBulletType = {
   cooldown: {
     shootingCur: 0,
     shootingMax: 8, // Delay between shots
@@ -227,7 +227,7 @@ export const way30 = {
   },
 };
 
-export const spiralHowl = {
+export const spiralHowl: IBulletType = {
   cooldown: {
     shootingCur: 0,
     shootingMax: 8, // Delay between shots
@@ -269,7 +269,7 @@ export const spiralHowl = {
   },
 };
 
-export const spiralHowlInward = {
+export const spiralHowlInward: IBulletType = {
   cooldown: {
     shootingCur: 0,
     shootingMax: 8, // Delay between shots
@@ -311,7 +311,7 @@ export const spiralHowlInward = {
   },
 };
 
-export const spread5 = {
+export const spread5: IBulletType = {
   cooldown: {
     shootingCur: 0,
     shootingMax: 8, // Delay between shots
@@ -362,7 +362,7 @@ export const spread5 = {
   },
 };
 
-export const spread8 = {
+export const spread8: IBulletType = {
   cooldown: {
     shootingCur: 0,
     shootingMax: 8, // Delay between shots
@@ -413,7 +413,7 @@ export const spread8 = {
   },
 };
 
-export const spread5Reverse = {
+export const spread5Reverse: IBulletType = {
   cooldown: {
     shootingCur: 0,
     shootingMax: 8, // Delay between shots
@@ -464,7 +464,7 @@ export const spread5Reverse = {
   },
 };
 
-export const linearAim = {
+export const linearAim: IBulletType = {
   cooldown: {
     shootingCur: 0,
     shootingMax: 5, // Delay between shots
@@ -501,7 +501,7 @@ export const linearAim = {
   },
 };
 
-export const linearLockOn = {
+export const linearLockOn: IBulletType = {
   cooldown: {
     shootingCur: 0,
     shootingMax: 5, // Delay between shots
@@ -538,7 +538,7 @@ export const linearLockOn = {
   },
 };
 
-export const spread5LockOn = {
+export const spread5LockOn: IBulletType = {
   cooldown: {
     shootingCur: 0,
     shootingMax: 8, // Delay between shots
@@ -597,7 +597,7 @@ export const spread5LockOn = {
   },
 };
 
-export const spread8LockOn = {
+export const spread8LockOn: IBulletType = {
   cooldown: {
     shootingCur: 0,
     shootingMax: 8, // Delay between shots
@@ -656,7 +656,7 @@ export const spread8LockOn = {
   },
 };
 
-export const homingSimple = {
+export const homingSimple: IBulletType = {
   cooldown: {
     shootingCur: 0,
     shootingMax: 10, // Delay between shots

@@ -31,9 +31,22 @@ export default class Bullet extends Animal {
   }
   draw(ctx: any) {
     ctx.beginPath();
-    ctx.fillStyle = this.color;
-    ctx.arc(this.x, this.y, this.width, 0, Math.PI * 2, false);
+    ctx.fillStyle = 'red';
+    ctx.arc(
+      this.x + this.width / 2,
+      this.y + this.height / 2,
+      this.width / 2,
+      0,
+      Math.PI * 2,
+      false
+    );
     ctx.fill();
+    /*
+    ctx.beginPath();
+    ctx.fillStyle = this.color;
+    ctx.rect(this.x, this.y, this.width, this.height);
+    ctx.fill();
+		*/
   }
 }
 
@@ -74,11 +87,11 @@ export class BulletAngle extends Bullet {
 
 export class BulletHoming extends Bullet {
   player: Player;
-  speed: number = -6;
+  speed: number = -7;
   homingTimerCur: number = 0;
-  homingTimerMax: number = 200;
+  homingTimerMax: number = 120;
   homingIntervalCur: number = 0;
-  homingIntervalMax: number = 15;
+  homingIntervalMax: number = 10;
   constructor(
     x: number,
     y: number,
