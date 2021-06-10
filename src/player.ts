@@ -30,15 +30,7 @@ class Player extends Animal {
   shoot() {
     if (this.cooldown.shootingCur >= this.cooldown.shootingMax) {
       this.bullets.push(
-        new Bullet(
-          this.x,
-          this.y - this.width / 2 - 4,
-          16,
-          16,
-          'blue',
-          [8, 0],
-          [0, 0]
-        )
+        new Bullet(this.x, this.y, 16, 16, 'blue', [8, 0], [0, 0])
       );
       this.cooldown.shootingCur = 0;
     } else this.cooldown.shootingCur++;

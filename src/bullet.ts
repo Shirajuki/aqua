@@ -32,14 +32,7 @@ export default class Bullet extends Animal {
   draw(ctx: any) {
     ctx.beginPath();
     ctx.fillStyle = 'red';
-    ctx.arc(
-      this.x + this.width / 2,
-      this.y + this.height / 2,
-      this.width / 2,
-      0,
-      Math.PI * 2,
-      false
-    );
+    ctx.arc(this.x, this.y, this.width / 2, 0, Math.PI * 2, false);
     ctx.fill();
     /*
     ctx.beginPath();

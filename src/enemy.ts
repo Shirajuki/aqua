@@ -131,7 +131,7 @@ export default class Enemy extends Animal {
       // Shoot using bullet pattern
       this.pattern({
         x: this.x,
-        y: this.y,
+        y: this.y + this.width / 2 + 4,
         width: this.width,
         height: this.height,
         size: 8,
