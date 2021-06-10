@@ -12,8 +12,6 @@ export default class Enemy extends Animal {
   pattern: ({
     x,
     y,
-    width,
-    height,
     cooldown,
     size,
     bulletArr,
@@ -132,8 +130,6 @@ export default class Enemy extends Animal {
       this.pattern({
         x: this.x,
         y: this.y + this.width / 2 + 4,
-        width: this.width,
-        height: this.height,
         size: 8,
         cooldown: this.cooldown,
         bulletArr: this.bullets,

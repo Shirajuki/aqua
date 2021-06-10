@@ -318,14 +318,12 @@ export const linearAim: IBulletType = {
     BurstTimeMax: 150,
   },
   pattern: ({ x, y, size, bulletArr, player }: IBulletPattern) => {
-    const speed = -5;
+    const speed = -8;
     // Determine angle using atan
     const angle = Math.atan2(y - player.y, x - player.x);
     const vx = speed * Math.cos(angle);
     const vy = speed * Math.sin(angle);
-    bulletArr.push(
-      new Bullet(x, y, size, size, 'green', [vx, vy], [-0.05, -0.05])
-    );
+    bulletArr.push(new Bullet(x, y, size, size, 'green', [vx, vy], [0, 0]));
   },
 };
 
