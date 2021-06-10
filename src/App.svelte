@@ -20,7 +20,6 @@
 
 			if (ctx) {
 				ctx.clearRect(0, 0, canvas.width, canvas.height);
-
 				// Draw number to the screen
 				ctx.font = '25px Arial';
 				ctx.fillStyle = 'black';
@@ -44,10 +43,12 @@
 					bullet.draw(ctx);
 					if (bullet.outOfRange) player.bullets.splice(i, 1);
 				}
+				// Enemies
 				for (let i = game.enemies.length - 1; i >= 0; i--) {
 					const enemy = game.enemies[i];
 					enemy.logic(ctx);
 					if (enemy.outOfRange2) game.enemies.splice(i, 1);
+					// Player bullet collision with enemy
 					for (let i = player.bullets.length - 1; i >= 0; i--) {
 						const bullet = player.bullets[i];
 						if (enemy.collision(bullet)) {
@@ -56,7 +57,6 @@
 						}
 					}
 				}
-				// Enemies
 				// Player movement
 				player.logic(ctx);
 			}

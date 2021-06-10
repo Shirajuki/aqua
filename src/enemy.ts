@@ -88,8 +88,9 @@ export default class Enemy extends Animal {
       this.behaviourLogic.stateDurationCur++;
       // Shoot while pathing
       if (
-        !behaviour.shootAfterPathing &&
-        this.behaviourLogic.stateDurationCur >= behaviour.shootAfter
+        this.shooting ||
+        (!behaviour.shootAfterPathing &&
+          this.behaviourLogic.stateDurationCur >= behaviour.shootAfter)
       )
         this.shootingLogic();
       if (distance < Math.abs(this.speed) || this.speed === 0) {
@@ -104,9 +105,7 @@ export default class Enemy extends Animal {
           if (this.behaviourLogic.stateDurationCur >= behaviour.shootAfter)
             this.shootingLogic();
           else this.behaviourLogic.stateDurationCur++;
-        } else if (!this.shooting) {
-          this.updateState();
-        }
+        } else this.updateState();
       }
     } else {
       // Normal shoot logic
@@ -146,12 +145,9 @@ export default class Enemy extends Animal {
       if (this.cooldown.burstCur >= this.cooldown.burstMax) {
         this.cooldown.burstCur = 0;
         this.shooting = false;
-        // Update behaviour state after shooting
-        if (
-          this.behaviourLogic?.state !== undefined &&
-          this.behaviourLogic?.behaviour[this.behaviourLogic?.state]
-            ?.shootAfterPathing
-        ) {
+        const behaviour =
+          this.behaviourLogic?.behaviour[this.behaviourLogic?.state];
+        if (behaviour.shootAfterPathing) {
           this.updateState();
         }
       }

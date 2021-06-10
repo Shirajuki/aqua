@@ -29,6 +29,8 @@ class Game {
   bullets: Bullet[];
   enemies: Enemy[];
   wave: number = 0;
+  spawnTimer: number = 0;
+  spawnCount: number = 0;
   enemyWavePattern: any[];
   constructor() {
     this.state = 0;
@@ -51,25 +53,50 @@ class Game {
     this.enemyWavePattern = [
       {
         enemies: [
-          new Enemy(
-            900,
-            100,
-            50,
-            50,
-            'orange',
-            this.bullets,
-            this.player,
-            spread5LockOn,
-            linearLogic
-          ),
+          {
+            x: 900,
+            y: 100,
+            width: 50,
+            height: 50,
+            color: 'orange',
+            bulletType: spread5LockOn,
+            behaviourLogics: linearLogic,
+          },
         ],
+        spawner: [
+          { enemyIndex: 0, timeToSpawn: 1000 },
+          { enemyIndex: 0, timeToSpawn: 1000 },
+          { enemyIndex: 0, timeToSpawn: 1000 },
+          { enemyIndex: 0, timeToSpawn: 1000 },
+          { enemyIndex: 0, timeToSpawn: 1000 },
+        ],
+        waveDuration: 2000,
       },
     ];
     this.addEnemy();
   }
   addEnemy() {
-    for (const enemy of this.enemyWavePattern[this.wave].enemies) {
-      this.enemies.push(enemy);
+    let timer = 0;
+    const wave = this.enemyWavePattern[this.wave];
+    for (let i = 0; i < wave.spawner.length; i++) {
+      const enemyIndex = wave.spawner[i].enemyIndex;
+      const timeToSpawn = wave.spawner[i].timeToSpawn;
+      const ei = wave.enemies[enemyIndex];
+      const newEnemy = new Enemy(
+        ei.x,
+        ei.y,
+        ei.width,
+        ei.height,
+        ei.color,
+        this.bullets,
+        this.player,
+        ei.bulletType,
+        ei.behaviourLogics()
+      );
+      timer += timeToSpawn;
+      setTimeout(() => {
+        this.enemies.push(newEnemy);
+      }, timer);
     }
   }
 }

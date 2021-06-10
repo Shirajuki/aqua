@@ -32,24 +32,33 @@ export const stillLogic: IBulletType = {
   },
 };
 
-export const linearLogic: IBehaviourLogic = {
-  state: 0,
-  stateDurationCur: 0,
-  bulletTypes: [linearLockOn, spread5LockOn],
-  behaviour: [
-    {
-      duration: 400,
-      path: { x: 100, y: 300 },
-      bulletType: 0,
-      shootAfter: 200,
-      shootAfterPathing: true,
-    },
-    {
-      duration: 400,
-      path: { y: 400 },
-      bulletType: 1,
-      shootAfter: 200,
-      shootAfterPathing: false,
-    },
-  ],
+export const linearLogic: () => IBehaviourLogic = () => {
+  return {
+    state: 0,
+    stateDurationCur: 0,
+    bulletTypes: [linearLockOn, spread5LockOn],
+    behaviour: [
+      {
+        duration: 400,
+        path: { x: 100, y: 300 },
+        bulletType: 1,
+        shootAfter: 200,
+        shootAfterPathing: false,
+      },
+      {
+        duration: 100,
+        path: { y: 400 },
+        bulletType: 1,
+        shootAfter: 50,
+        shootAfterPathing: false,
+      },
+      {
+        duration: 300,
+        path: { x: 900 },
+        bulletType: 1,
+        shootAfter: 0,
+        shootAfterPathing: false,
+      },
+    ],
+  };
 };
