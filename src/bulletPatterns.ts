@@ -252,8 +252,8 @@ export const spread8: IBulletType = {
       let vy = Math.sin(angle) * speed;
       bulletArr.push(
         new Bullet(
-          x + width / 2 - size / 2,
-          y + height / 2 + size / 2,
+          x + size / 2 - size / 2,
+          y + size / 2 + size / 2,
           size,
           size,
           'green',
@@ -295,8 +295,8 @@ export const spread5Reverse: IBulletType = {
       let vy = Math.sin(angle) * speed;
       bulletArr.push(
         new BulletAngle(
-          x + width / 2 - size / 2,
-          y + height / 2 + size / 2,
+          x + size / 2 - size / 2,
+          y + size / 2 + size / 2,
           size,
           size,
           'green',

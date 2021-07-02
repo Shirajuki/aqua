@@ -30,6 +30,8 @@ export default class Enemy extends Animal {
   behaviourLogic: IBehaviourLogic;
   speed: number = 0;
   arrived: boolean = false;
+  hp: number = 0;
+  dead: boolean = false;
   constructor(
     x: number,
     y: number,
@@ -39,7 +41,8 @@ export default class Enemy extends Animal {
     bullets: Bullet[],
     player: Player,
     bulletType: IBulletType,
-    behaviourLogic: IBehaviourLogic
+    behaviourLogic: IBehaviourLogic,
+    hp: number
   ) {
     super(x, y, width, height, color);
     this.bullets = bullets;
@@ -51,6 +54,8 @@ export default class Enemy extends Animal {
     // Bullet Pattern
     this.bulletType = bulletType;
     this.updateBulletType();
+
+    this.hp = hp;
   }
   updateBulletType() {
     const { cooldown, pattern } =
@@ -113,7 +118,12 @@ export default class Enemy extends Animal {
     // Draw enemy
     this.draw(ctx);
   }
-  hit() {}
+  hit() {
+    this.hp--;
+    if (this.hp <= 0) {
+      this.dead = true;
+    }
+  }
   shootingLogic() {
     if (this.shooting) this.shoot();
     else {
@@ -143,9 +153,10 @@ export default class Enemy extends Animal {
         this.shooting = false;
         const behaviour =
           this.behaviourLogic?.behaviour[this.behaviourLogic?.state];
-        if (behaviour.shootAfterPathing) {
-          this.updateState();
-        }
+        if (behaviour)
+          if (behaviour.shootAfterPathing) {
+            this.updateState();
+          }
       }
     } else {
       this.cooldown.shootingCur++;

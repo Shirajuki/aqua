@@ -1,25 +1,7 @@
 import Player from './player';
 import Enemy from './enemy';
 import type Bullet from './bullet';
-import {
-  linear,
-  linearAccel,
-  linearDecel,
-  way20TurnRight,
-  way20TurnLeft,
-  way20,
-  way30,
-  spiralHowl,
-  spiralHowlInward,
-  spread5,
-  spread8,
-  spread5Reverse,
-  linearAim,
-  linearLockOn,
-  spread5LockOn,
-  spread8LockOn,
-  homingSimple,
-} from './bulletPatterns';
+import * as bp from './bulletPatterns';
 
 import { stillLogic, linearLogic } from './behaviourLogics';
 
@@ -45,8 +27,9 @@ class Game {
       'black',
       this.bullets,
       this.player,
-      linearAim,
-      null
+      bp.linearAim,
+      null,
+      10000
     );
     this.enemies = [boss];
 
@@ -59,13 +42,14 @@ class Game {
             width: 50,
             height: 50,
             color: 'orange',
-            bulletType: spread5LockOn,
+            bulletType: bp.spread5LockOn,
             behaviourLogics: linearLogic,
+            hp: 10,
           },
         ],
         spawner: [
           { enemyIndex: 0, timeToSpawn: 1000 },
-          //{ enemyIndex: 0, timeToSpawn: 1000 },
+          { enemyIndex: 0, timeToSpawn: 1000 },
           //{ enemyIndex: 0, timeToSpawn: 1000 },
           //{ enemyIndex: 0, timeToSpawn: 1000 },
           //{ enemyIndex: 0, timeToSpawn: 1000 },
@@ -91,12 +75,13 @@ class Game {
         this.bullets,
         this.player,
         ei.bulletType,
-        ei.behaviourLogics()
+        ei.behaviourLogics(),
+        ei.hp
       );
-      timer += timeToSpawn;
       setTimeout(() => {
         this.enemies.push(newEnemy);
       }, timer);
+      timer += timeToSpawn;
     }
   }
 }

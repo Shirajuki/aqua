@@ -47,12 +47,12 @@
 				for (let i = game.enemies.length - 1; i >= 0; i--) {
 					const enemy = game.enemies[i];
 					enemy.logic(ctx);
-					if (enemy.outOfRange2) game.enemies.splice(i, 1);
+					if (enemy.outOfRange2 || enemy.dead) game.enemies.splice(i, 1);
 					// Player bullet collision with enemy
-					for (let i = player.bullets.length - 1; i >= 0; i--) {
-						const bullet = player.bullets[i];
+					for (let j = player.bullets.length - 1; j >= 0; j--) {
+						const bullet = player.bullets[j];
 						if (enemy.collision(bullet)) {
-							player.bullets.splice(i, 1);
+							player.bullets.splice(j, 1);
 							enemy.hit();
 						}
 					}
