@@ -8,7 +8,7 @@
   <a href="https://github.com/Shirajuki/aqua/blob/main/LICENSE" alt="LICENSE">
     <img src="https://img.shields.io/github/license/Shirajuki/aqua" />
   </a>
-  <a href="https://github.com/1-fredrikstad/sangbok/issues" alt="Issues">
+  <a href="https://github.com/Shirajuki/aqua/issues" alt="Issues">
     <img src="https://img.shields.io/github/issues/Shirajuki/aqua" />
   </a>
 </p>
