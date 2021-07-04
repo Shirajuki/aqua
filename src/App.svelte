@@ -3,8 +3,10 @@
 	import Game from './game';
 
 	let canvas: any;
+	let bg: any;
 	const game = new Game();
 	const player = game.player;
+	const scroll: {x: number, y: number} = { x: 0, y: 0 };
 	(window as any).game = game;
 	onMount(() => {
 		const ctx = canvas.getContext('2d');
@@ -59,6 +61,16 @@
 				}
 				// Player movement
 				player.logic(ctx);
+				// Camera & background
+				scroll.x += ((-player.x - scroll.x + 200) / 150);
+				scroll.y += ((player.y - scroll.y - 320) / 100);
+				// Limit scroll view to the map on x coordinate, snaps to place
+				if (scroll.x > -5) scroll.x = -5;
+				else if (scroll.x < -150) scroll.x = -150
+				// Limit scroll view to the map on y coordinate, snaps to place at bottom
+				if (scroll.y < -100) scroll.y = -100;
+				else if (scroll.y > 0) scroll.y = 0;
+				bg.style.transform = `translate(${scroll.x}px, ${scroll.y}px)`
 			}
 		};
 		requestAnimationFrame(gameLoop);
@@ -87,17 +99,30 @@
 	};
 </script>
 
-<canvas bind:this={canvas} width={1024} height={600} />
+<div class="viewport">
+	<img bind:this={bg} class="bg" src="/images/bg.png" alt="background">
+</div>
+<canvas bind:this={canvas} width={924} height={520} />
 
 <style>
-	* {
-		box-sizing: border-box;
-	}
 	canvas {
-		background-color: #eee;
+		background-color: transparent;
+		border: 1px solid black;
 		position: absolute;
 		left: 50%;
 		top: 50%;
 		transform: translate(-50%, -50%);
+	}
+	div.viewport {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		width: 924px;
+		height: 520px;
+		overflow: hidden;
+	}
+	div.viewport > .bg {
+		width: 1100px;
 	}
 </style>

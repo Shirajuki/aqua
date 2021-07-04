@@ -20,7 +20,7 @@ class Game {
     this.bullets = [];
 
     let boss = new Enemy(
-      900,
+      800,
       300,
       50,
       50,
@@ -37,7 +37,7 @@ class Game {
       {
         enemies: [
           {
-            x: 900,
+            x: 800,
             y: 100,
             width: 50,
             height: 50,
@@ -48,8 +48,8 @@ class Game {
           },
         ],
         spawner: [
-          { enemyIndex: 0, timeToSpawn: 1000 },
-          { enemyIndex: 0, timeToSpawn: 1000 },
+          // { enemyIndex: 0, timeToSpawn: 1000 },
+          //{ enemyIndex: 0, timeToSpawn: 1000 },
           //{ enemyIndex: 0, timeToSpawn: 1000 },
           //{ enemyIndex: 0, timeToSpawn: 1000 },
           //{ enemyIndex: 0, timeToSpawn: 1000 },

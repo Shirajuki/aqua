@@ -17,14 +17,11 @@ class Player extends Animal {
     const i = this.focusing ? 1 : 0;
     if (this.movement.left && this.x - this.velocity[i] - this.width * 2 > 0)
       this.x -= this.velocity[i];
-    if (this.movement.up && this.y - this.velocity[i] - this.height * 2 > 0)
+    if (this.movement.up && this.y - this.velocity[i] - this.height * 2 > 50)
       this.y -= this.velocity[i];
-    if (
-      this.movement.right &&
-      this.x + this.velocity[i] < 1024 - this.width * 2
-    )
+    if (this.movement.right && this.x + this.velocity[i] < 924 - this.width * 2)
       this.x += this.velocity[i];
-    if (this.movement.down && this.y + this.velocity[i] < 600 - this.height * 2)
+    if (this.movement.down && this.y + this.velocity[i] < 520 - this.height * 2)
       this.y += this.velocity[i];
   }
   shoot() {
