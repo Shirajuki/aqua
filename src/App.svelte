@@ -4,9 +4,12 @@
 
 	let canvas: any;
 	let bg: any;
+	let sky0: any;
+	let sky1: any;
 	const game = new Game();
 	const player = game.player;
 	const scroll: {x: number, y: number} = { x: 0, y: 0 };
+	const skyScroll: number[] = [0,-1140];
 	(window as any).game = game;
 	onMount(() => {
 		const ctx = canvas.getContext('2d');
@@ -61,16 +64,22 @@
 				}
 				// Player movement
 				player.logic(ctx);
+
 				// Camera & background
-				scroll.x += ((-player.x - scroll.x + 200) / 150);
-				scroll.y += ((player.y - scroll.y - 320) / 100);
+				scroll.x += ((-player.x - scroll.x + 200) / 150) | 0;
+				scroll.y += ((player.y - scroll.y - 320) / 100) | 0;
 				// Limit scroll view to the map on x coordinate, snaps to place
 				if (scroll.x > -5) scroll.x = -5;
-				else if (scroll.x < -150) scroll.x = -150
+				else if (scroll.x < -200) scroll.x = -200
 				// Limit scroll view to the map on y coordinate, snaps to place at bottom
 				if (scroll.y < -100) scroll.y = -100;
 				else if (scroll.y > 0) scroll.y = 0;
 				bg.style.transform = `translate(${scroll.x}px, ${scroll.y}px)`
+				// Scrolling parallax sky
+				sky0.style.transform = `translate(${scroll.x - skyScroll[0]}px, ${scroll.y}px)`
+				sky1.style.transform = `translate(${scroll.x - skyScroll[1]}px, ${scroll.y}px)`
+				skyScroll[0] += 0.2;
+				skyScroll[1] += 0.2;
 			}
 		};
 		requestAnimationFrame(gameLoop);
@@ -100,6 +109,8 @@
 </script>
 
 <div class="viewport">
+	<img bind:this={sky0} class="sky" src="/images/sky.png" alt="sky0">
+	<img bind:this={sky1} class="sky" src="/images/sky.png" alt="sky1">
 	<img bind:this={bg} class="bg" src="/images/bg.png" alt="background">
 </div>
 <canvas bind:this={canvas} width={924} height={520} />
@@ -120,9 +131,13 @@
 		transform: translate(-50%, -50%);
 		width: 924px;
 		height: 520px;
-		overflow: hidden;
 	}
 	div.viewport > .bg {
-		width: 1100px;
+		width: 1140px;
+	}
+	div.viewport > .sky {
+		position: absolute;
+		width: 1140px;
+		z-index: 1;
 	}
 </style>
