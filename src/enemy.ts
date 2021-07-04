@@ -1,6 +1,7 @@
 import Animal from './animal';
 import type Bullet from './bullet';
 import type Player from './player';
+import * as ease from './easing';
 
 export default class Enemy extends Animal {
   outOfRange: boolean = false;
@@ -27,7 +28,6 @@ export default class Enemy extends Animal {
     BurstTimeMax: 100,
   };
   bulletType: IBulletType;
-  behaviourLogic: IBehaviourLogic;
   speed: number = 0;
   arrived: boolean = false;
   hp: number = 0;
@@ -41,15 +41,11 @@ export default class Enemy extends Animal {
     bullets: Bullet[],
     player: Player,
     bulletType: IBulletType,
-    behaviourLogic: IBehaviourLogic,
     hp: number
   ) {
     super(x, y, width, height, color);
     this.bullets = bullets;
     this.player = player;
-
-    // Behaviour Logics s.t. movements and different attack patterns
-    this.behaviourLogic = behaviourLogic;
 
     // Bullet Pattern
     this.bulletType = bulletType;
@@ -58,63 +54,15 @@ export default class Enemy extends Animal {
     this.hp = hp;
   }
   updateBulletType() {
-    const { cooldown, pattern } =
-      this.behaviourLogic?.bulletTypes[
-        this.behaviourLogic?.behaviour[this.behaviourLogic?.state]?.bulletType
-      ] || this.bulletType;
+    const { cooldown, pattern } = this.bulletType;
     this.cooldown = cooldown;
     this.pattern = pattern;
     this.target = [this.player.x, this.player.y];
   }
   logic(ctx: any) {
-    // Behaviour logic
-    const behaviour =
-      this.behaviourLogic?.behaviour[this.behaviourLogic?.state];
-    // If a behaviour logic is found, follow through the logic
-    if (behaviour) {
-      // Get the distance from point A to B
-      const x = behaviour.path.x || this.x;
-      const y = behaviour.path.y || this.y;
-      const distance = Math.sqrt(
-        Math.pow(x - this.x, 2) + Math.pow(y - this.y, 2)
-      );
-      // Set the linear speed
-      if (this.speed == 0 && !this.arrived)
-        this.speed = (distance / behaviour.duration) * -1;
-      // Move through the path to point B
-      const angle = Math.atan2(this.y - y, this.x - x);
-      const vx = Math.cos(angle) * this.speed;
-      const vy = Math.sin(angle) * this.speed;
-      this.x += vx;
-      this.y += vy;
-      // Increment state duration
-      this.behaviourLogic.stateDurationCur++;
-      // Shoot while pathing
-      if (
-        this.shooting ||
-        (!behaviour.shootAfterPathing &&
-          this.behaviourLogic.stateDurationCur >= behaviour.shootAfter)
-      )
-        this.shootingLogic();
-      if (distance < Math.abs(this.speed) || this.speed === 0) {
-        if (!this.arrived) {
-          this.arrived = true;
-          this.speed = 0;
-          this.behaviourLogic.stateDurationCur = 0;
-          this.cooldown.burstTimeCur = this.cooldown.BurstTimeMax; // Set to begin shooting at once
-        }
-        // Shoot after pathing
-        if (behaviour.shootAfterPathing) {
-          if (this.behaviourLogic.stateDurationCur >= behaviour.shootAfter)
-            this.shootingLogic();
-          else this.behaviourLogic.stateDurationCur++;
-        } else this.updateState();
-      }
-    } else {
-      // Normal shoot logic
-      this.shootingLogic();
-    }
-
+    this.shootingLogic();
+    this.x -= ease.easeInQuad(1.2);
+    this.y += ease.easeInQuad(0.8);
     // Draw enemy
     this.draw(ctx);
   }
@@ -151,22 +99,9 @@ export default class Enemy extends Animal {
       if (this.cooldown.burstCur >= this.cooldown.burstMax) {
         this.cooldown.burstCur = 0;
         this.shooting = false;
-        const behaviour =
-          this.behaviourLogic?.behaviour[this.behaviourLogic?.state];
-        if (behaviour)
-          if (behaviour.shootAfterPathing) {
-            this.updateState();
-          }
       }
     } else {
       this.cooldown.shootingCur++;
     }
-  }
-  updateState() {
-    this.behaviourLogic.state =
-      (this.behaviourLogic.state + 1) % this.behaviourLogic.behaviour.length;
-    this.behaviourLogic.stateDurationCur = 0;
-    this.arrived = false;
-    this.updateBulletType();
   }
 }

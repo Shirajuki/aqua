@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Game from './game';
+	import {explosion} from './particle';
 
 	let canvas: any;
 	let bg: any;
@@ -48,11 +49,22 @@
 					bullet.draw(ctx);
 					if (bullet.outOfRange) player.bullets.splice(i, 1);
 				}
+				// Particles
+				for (let i = game.particles.length - 1; i >= 0; i--) {
+					const particle = game.particles[i];
+					particle.move();
+					particle.draw(ctx);
+					if (particle.outOfRange) game.particles.splice(i, 1);
+				}
 				// Enemies
 				for (let i = game.enemies.length - 1; i >= 0; i--) {
 					const enemy = game.enemies[i];
 					enemy.logic(ctx);
-					if (enemy.outOfRange2 || enemy.dead) game.enemies.splice(i, 1);
+					if (enemy.outOfRange2 || enemy.dead) {
+						explosion({x: enemy.x, y: enemy.y, size: 10, particleArr: game.particles});
+						game.enemies.splice(i, 1);
+						continue;
+					}
 					// Player bullet collision with enemy
 					for (let j = player.bullets.length - 1; j >= 0; j--) {
 						const bullet = player.bullets[j];
@@ -66,20 +78,22 @@
 				player.logic(ctx);
 
 				// Camera & background
-				scroll.x += ((-player.x - scroll.x + 200) / 150) | 0;
-				scroll.y += ((player.y - scroll.y - 320) / 100) | 0;
-				// Limit scroll view to the map on x coordinate, snaps to place
+				scroll.x += ((-player.x - scroll.x + 200) / 150);
+				scroll.y += ((player.y - scroll.y - 320) / 100);
+				// Limit scroll view to the map on x and y coordinates, snaps to place
 				if (scroll.x > -5) scroll.x = -5;
 				else if (scroll.x < -200) scroll.x = -200
-				// Limit scroll view to the map on y coordinate, snaps to place at bottom
 				if (scroll.y < -100) scroll.y = -100;
 				else if (scroll.y > 0) scroll.y = 0;
 				bg.style.transform = `translate(${scroll.x}px, ${scroll.y}px)`
+
 				// Scrolling parallax sky
 				sky0.style.transform = `translate(${scroll.x - skyScroll[0]}px, ${scroll.y}px)`
 				sky1.style.transform = `translate(${scroll.x - skyScroll[1]}px, ${scroll.y}px)`
 				skyScroll[0] += 0.2;
 				skyScroll[1] += 0.2;
+				if (skyScroll[0] > 1140) skyScroll[0] = 0;
+				if (skyScroll[1] > 0) skyScroll[1] = -1140;
 			}
 		};
 		requestAnimationFrame(gameLoop);

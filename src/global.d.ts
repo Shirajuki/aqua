@@ -39,3 +39,14 @@ interface IBehaviourLogic {
   bulletTypes: IBulletType[];
   behaviour: IBehaviour[];
 }
+
+// Particle interface
+interface IParticlePattern {
+  x: number;
+  y: number;
+  size: number;
+  cooldown?: any;
+  particleArr: Bullet[];
+  player?: Player;
+  target?: number[];
+}

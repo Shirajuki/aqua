@@ -1,15 +1,18 @@
 import Player from './player';
 import Enemy from './enemy';
+import Boss from './boss';
 import type Bullet from './bullet';
 import * as bp from './bulletPatterns';
 
 import { stillLogic, linearLogic } from './behaviourLogics';
+import type Particle from './particle';
 
 class Game {
   state: number;
   player: Player;
   bullets: Bullet[];
   enemies: Enemy[];
+  particles: Particle[];
   wave: number = 0;
   spawnTimer: number = 0;
   spawnCount: number = 0;
@@ -18,8 +21,9 @@ class Game {
     this.state = 0;
     this.player = new Player(100, 100, 10, 10, 'red');
     this.bullets = [];
+    this.particles = [];
 
-    let boss = new Enemy(
+    let enemy = new Boss(
       800,
       300,
       50,
@@ -27,11 +31,11 @@ class Game {
       'black',
       this.bullets,
       this.player,
-      bp.linearAim,
-      null,
-      10000
+      bp.spread5LockOn,
+      undefined,
+      100
     );
-    this.enemies = [boss];
+    this.enemies = [enemy];
 
     this.enemyWavePattern = [
       {
@@ -42,22 +46,21 @@ class Game {
             width: 50,
             height: 50,
             color: 'orange',
-            bulletType: bp.spread5LockOn,
-            behaviourLogics: linearLogic,
-            hp: 10,
+            bulletType: bp.linearAim,
+            hp: 15,
           },
         ],
         spawner: [
-          // { enemyIndex: 0, timeToSpawn: 1000 },
-          //{ enemyIndex: 0, timeToSpawn: 1000 },
-          //{ enemyIndex: 0, timeToSpawn: 1000 },
-          //{ enemyIndex: 0, timeToSpawn: 1000 },
-          //{ enemyIndex: 0, timeToSpawn: 1000 },
+          { enemyIndex: 0, timeToSpawn: 1000 },
+          { enemyIndex: 0, timeToSpawn: 1000 },
+          { enemyIndex: 0, timeToSpawn: 1000 },
+          { enemyIndex: 0, timeToSpawn: 1000 },
+          { enemyIndex: 0, timeToSpawn: 1000 },
         ],
         waveDuration: 2000,
       },
     ];
-    this.addEnemy();
+    // setTimeout(() => this.addEnemy(), 2000);
   }
   addEnemy() {
     let timer = 0;
@@ -67,6 +70,31 @@ class Game {
       const timeToSpawn = wave.spawner[i].timeToSpawn;
       const ei = wave.enemies[enemyIndex];
       const newEnemy = new Enemy(
+        ei.x,
+        ei.y,
+        ei.width,
+        ei.height,
+        ei.color,
+        this.bullets,
+        this.player,
+        ei.bulletType,
+        ei.hp
+      );
+      setTimeout(() => {
+        this.enemies.push(newEnemy);
+      }, timer);
+      timer += timeToSpawn;
+    }
+  }
+  // Add boss
+  addBoss() {
+    let timer = 0;
+    const wave = this.enemyWavePattern[this.wave];
+    for (let i = 0; i < wave.spawner.length; i++) {
+      const enemyIndex = wave.spawner[i].enemyIndex;
+      const timeToSpawn = wave.spawner[i].timeToSpawn;
+      const ei = wave.enemies[enemyIndex];
+      const newEnemy = new Boss(
         ei.x,
         ei.y,
         ei.width,

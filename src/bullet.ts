@@ -22,7 +22,7 @@ export default class Bullet extends Animal {
     this.x += this.velocity[0];
     this.y += this.velocity[1];
     this.velocity[0] += this.acceleration[0];
-    this.velocity[0] += this.acceleration[1];
+    this.velocity[1] += this.acceleration[1];
     if (
       !this.outOfRange &&
       (this.x < 0 || this.x > 1200 || this.y < 0 || this.y > 900)

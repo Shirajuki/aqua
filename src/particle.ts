@@ -1,11 +1,25 @@
 import Bullet from './bullet';
 
 export default class Particle extends Bullet {
+  lifeTime: number = 0;
+  friction: number = 0;
+  constructor(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    color: string,
+    velocity: number[],
+    lifeTime: number
+  ) {
+    super(x, y, width, height, color, velocity, [0, 0]);
+    this.lifeTime = lifeTime;
+    this.friction = 0.96;
+  }
   move() {
-    this.x += this.velocity[0];
-    this.y += this.velocity[1];
-    this.velocity[0] += this.acceleration[0];
-    this.velocity[0] += this.acceleration[1];
+    this.velocity[0] *= this.friction;
+    this.x += Math.cos(this.velocity[1]) * this.velocity[0] + 0.5;
+    this.y += Math.sin(this.velocity[1]) * this.velocity[0];
     if (
       !this.outOfRange &&
       (this.x < 0 || this.x > 1200 || this.y < 0 || this.y > 900)
@@ -13,23 +27,31 @@ export default class Particle extends Bullet {
       this.outOfRange = true;
   }
   draw(ctx: any) {
+    if (this.lifeTime !== 0) {
+      this.lifeTime -= 0.01;
+    }
     ctx.beginPath();
-    ctx.fillStyle = this.color;
-    ctx.rect(this.x, this.y - this.height / 2, this.width, this.height);
+    ctx.fillStyle = `rgba(150,220,200,${this.lifeTime})`;
+    ctx.arc(this.x, this.y - this.height / 2, this.width, 0, Math.PI * 2);
     ctx.fill();
   }
 }
 
-export const linear: IBulletType = {
-  cooldown: {
-    shootingCur: 0,
-    shootingMax: 5, // Delay between shots
-    burstCur: 0,
-    burstMax: 10, // Shoot 10 times then wait for cooldown
-    burstTimeCur: 0,
-    BurstTimeMax: 150,
-  },
-  pattern: ({ x, y, size, bulletArr }: IBulletPattern) => {
-    bulletArr.push(new Bullet(x, y, size, size, 'green', [-8, 0], [0, 0]));
-  },
+export const explosion = ({ x, y, size, particleArr }: IParticlePattern) => {
+  let antall = 30;
+  for (let i = 1; i <= antall; i++) {
+    const speed = Math.random() * 5;
+    let angle = Math.random() * Math.PI * 2;
+    particleArr.push(
+      new Particle(
+        x,
+        y,
+        Math.random() * size + 5,
+        size,
+        'green',
+        [speed, angle],
+        1
+      )
+    );
+  }
 };
