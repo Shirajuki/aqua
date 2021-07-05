@@ -19,16 +19,16 @@ class Game {
   enemyWavePattern: any[];
   constructor() {
     this.state = 0;
-    this.player = new Player(100, 100, 10, 10, 'red');
+    this.player = new Player(100, 100, 8, 8, 'red');
     this.bullets = [];
     this.particles = [];
 
     let enemy = new Boss(
-      800,
-      300,
-      50,
-      50,
-      'black',
+      600,
+      200,
+      400,
+      227,
+      'rgba(0,0,0,0.2)',
       this.bullets,
       this.player,
       bp.spread5LockOn,

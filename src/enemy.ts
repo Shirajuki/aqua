@@ -32,6 +32,14 @@ export default class Enemy extends Animal {
   arrived: boolean = false;
   hp: number = 0;
   dead: boolean = false;
+  sprite = new Image();
+  animation = {
+    curFrame: 0,
+    frames: 5,
+    frameSpeed: 1,
+    frameCurTimer: 0,
+    frameDuration: 5,
+  };
   constructor(
     x: number,
     y: number,
@@ -46,6 +54,7 @@ export default class Enemy extends Animal {
     super(x, y, width, height, color);
     this.bullets = bullets;
     this.player = player;
+    this.sprite.src = '/images/neko_sprite.png';
 
     // Bullet Pattern
     this.bulletType = bulletType;
@@ -59,12 +68,41 @@ export default class Enemy extends Animal {
     this.pattern = pattern;
     this.target = [this.player.x, this.player.y];
   }
+  animate() {
+    if (this.animation.frameCurTimer >= this.animation.frameDuration) {
+      this.animation.frameCurTimer = 0;
+      this.animation.curFrame++;
+    } else this.animation.frameCurTimer += this.animation.frameSpeed;
+    if (this.animation.curFrame === this.animation.frames)
+      this.animation.curFrame = 0;
+  }
   logic(ctx: any) {
     this.shootingLogic();
     this.x -= ease.easeInQuad(1.2);
     this.y += ease.easeInQuad(0.8);
-    // Draw enemy
+    // Animate and draw enemy
+    this.animate();
     this.draw(ctx);
+  }
+  draw(ctx: any) {
+    /*
+		ctx.beginPath();
+    ctx.fillStyle = this.color;
+    ctx.rect(this.x, this.y, this.width, this.height);
+    ctx.fill();
+		*/
+    if (this.sprite.complete)
+      ctx.drawImage(
+        this.sprite,
+        0,
+        245 * this.animation.curFrame,
+        430,
+        245,
+        this.x,
+        this.y,
+        this.width,
+        this.height
+      );
   }
   hit() {
     this.hp--;

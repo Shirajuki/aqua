@@ -37,9 +37,14 @@ export default class Particle extends Bullet {
   }
 }
 
-export const explosion = ({ x, y, size, particleArr }: IParticlePattern) => {
-  let antall = 30;
-  for (let i = 1; i <= antall; i++) {
+export const explosion = ({
+  x,
+  y,
+  size,
+  amount,
+  particleArr,
+}: IParticlePattern) => {
+  for (let i = 1; i <= amount; i++) {
     const speed = Math.random() * 5;
     let angle = Math.random() * Math.PI * 2;
     particleArr.push(

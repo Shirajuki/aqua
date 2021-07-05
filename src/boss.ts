@@ -93,7 +93,8 @@ export default class Boss extends Enemy {
       this.shootingLogic();
     }
 
-    // Draw enemy
+    // Animate and draw enemy
+    this.animate();
     this.draw(ctx);
   }
   hit() {

@@ -61,7 +61,13 @@
 					const enemy = game.enemies[i];
 					enemy.logic(ctx);
 					if (enemy.outOfRange2 || enemy.dead) {
-						explosion({x: enemy.x, y: enemy.y, size: 10, particleArr: game.particles});
+						explosion({
+							x: enemy.x + enemy.width / 2,
+							y: enemy.y + enemy.height / 2,
+							size: 10,
+							amount: Math.max(enemy.width/4, 30),
+							particleArr: game.particles
+						});
 						game.enemies.splice(i, 1);
 						continue;
 					}
@@ -145,6 +151,7 @@
 		transform: translate(-50%, -50%);
 		width: 924px;
 		height: 520px;
+		overflow: hidden;
 	}
 	div.viewport > .bg {
 		width: 1140px;

@@ -12,6 +12,24 @@ class Player extends Animal {
     shootingCur: 0,
     shootingMax: 5,
   };
+  sprite = new Image();
+  animation = {
+    curFrame: 0,
+    frames: 5,
+    frameSpeed: 1,
+    frameCurTimer: 0,
+    frameDuration: 3,
+  };
+  constructor(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    color: string
+  ) {
+    super(x, y, width, height, color);
+    this.sprite.src = '/images/aqua_sprite.png';
+  }
   move() {
     // Maybe set this to constant v
     const i = this.focusing ? 1 : 0;
@@ -33,6 +51,7 @@ class Player extends Animal {
     } else this.cooldown.shootingCur++;
   }
   draw(ctx: any) {
+    /*
     ctx.beginPath();
     ctx.fillStyle = this.color;
     ctx.rect(
@@ -42,15 +61,36 @@ class Player extends Animal {
       this.height * 4
     );
     ctx.fill();
-
+		*/
+    if (this.sprite.complete)
+      ctx.drawImage(
+        this.sprite,
+        0,
+        524 * this.animation.curFrame,
+        408,
+        524,
+        this.x - 60,
+        this.y - 80,
+        100,
+        133
+      );
     ctx.beginPath();
-    ctx.fillStyle = 'blue';
+    ctx.fillStyle = 'aqua';
     ctx.arc(this.x, this.y, this.width, 0, 2 * Math.PI);
     ctx.fill();
+  }
+  animate() {
+    if (this.animation.frameCurTimer >= this.animation.frameDuration) {
+      this.animation.frameCurTimer = 0;
+      this.animation.curFrame++;
+    } else this.animation.frameCurTimer += this.animation.frameSpeed;
+    if (this.animation.curFrame === this.animation.frames)
+      this.animation.curFrame = 0;
   }
   logic(ctx: any) {
     if (this.shooting) this.shoot();
     this.move();
+    this.animate();
     this.draw(ctx);
   }
   hit() {
