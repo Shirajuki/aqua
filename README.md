@@ -23,14 +23,7 @@ A Work In Progress Touhou, Azur Lane and Harmful Park inspired danmaku JS horizo
 - LocalStorage API
 - Service Workers (PWA)
 
-## License
-
-Distributed under the MIT License. See [`LICENSE`](./LICENSE) for more information.
 <hr />
-<hr />
-<hr />
-
-# Svelte PWA
 
 This is a Progressive Web App (PWA) template for [Svelte](https://svelte.dev) apps. It lives at https://github.com/tretapey/svelte-pwa.
 
@@ -79,3 +72,7 @@ To create an optimised version of the app:
 ```bash
 npm run build
 ```
+
+## License
+
+Distributed under the MIT License. See [`LICENSE`](./LICENSE) for more information.
