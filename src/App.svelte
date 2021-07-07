@@ -29,6 +29,9 @@
 				ctx.font = '25px Arial';
 				ctx.fillStyle = 'black';
 				ctx.fillText('FPS: ' + fps, canvas.width - 100, canvas.height - 10);
+				// Add score
+				game.score++;
+				// Draw the game
 				game.draw(ctx);
 				
 				// Camera & background
@@ -82,32 +85,33 @@
 		<img bind:this={sky1} class="sky" src="/images/sky.png" alt="sky1">
 		<img bind:this={bg} class="bg" src="/images/bg.png" alt="background">
 	</div>
-	<canvas bind:this={canvas} width={924} height={520} />
 	<div class="gui">
-		<div class="life">
-			<p>life</p>
-			<span class="heart"></span>
-			<span class="heart"></span>
-			<span class="heart"></span>
+		<div>
+			<div class="score">
+				<p>score</p>
+				<p class="scorec">{String(game.score).padStart(9, '0')}</p>
+			</div>
+			<div class="life">
+				<span class="heart"></span>
+				<span class="heart"></span>
+				<span class="heart"></span>
+			</div>
 		</div>
-		<div class="mana">
-			<p>mana</p>
-			<span class="star"></span>
-			<span class="star"></span>
-			<span class="star"></span>
-		</div>
-		<div class="power">
-			<p>power</p>
-			<span class="sword"></span>
-			<span class="sword"></span>
-			<span class="sword"></span>
-			<span class="sword"></span>
-		</div>
-		<div class="score">
-			<p>score</p>
-			<p class="scorec">000123456789</p>
+		<div>
+			<div class="mana">
+				<span class="star"></span>
+				<span class="star"></span>
+				<span class="star"></span>
+			</div>
+			<div class="power">
+				<span class="sword"></span>
+				<span class="sword"></span>
+				<span class="sword"></span>
+				<span class="sword"></span>
+			</div>
 		</div>
 	</div>
+	<canvas bind:this={canvas} width={924} height={520} />
 </div>
 
 <style>
@@ -146,49 +150,49 @@
 	}
 	div.gui {
 		display: flex;
-		justify-content: center;
 		position: absolute;
 		top: 0;
-		width: 924px;
-		background-color: rgba(0,0,0,0.4);
+		width: auto;
+		border-radius: 0 0 25px 0;
+		background-color: rgba(0,0,0,0.3);
 		color: #fff;
 		font-size: 1.6rem;
 		font-family: setofont, monotype, sans-serif;
 		font-weight: 700;
-		padding: 8px
+		padding: 8px 10px 10px 8px;
 	}
 	div.gui > div {
 		display: flex;
+		flex-direction: column;
 	}
-	div.gui > div > p {
-		margin-right: 4px;
+	div.gui > div:first-of-type {
+		margin-right: 10px;
 	}
-	div.gui > div:not(:first-child) > p:first-of-type {
-		margin-left: 10px;
+	div.gui > div > div {
+		display: flex;
 	}
-	div.gui > div > span {
+	div.gui > div span {
 		display: block;
-		width: 40px;
+		width: 30px;
 		background-size: 100% 100%;
-		align-self: flex-end;
-		margin-left: 3px;
+	}
+	div.gui > div > div.score {
+		flex-direction: column;
 	}
 	span.heart {
 		background-image: url(/images/heart.svg);
-		height: 28px;
+		height: 20px;
 	}
 	span.star{
 		background-image: url(/images/star.svg);
-		height: 38px;
+		height: 28px;
 	}
 	span.sword{
 		background-image: url(/images/sword.svg);
-		height: 35px;
+		height: 25px;
 	}
 	p.scorec {
 		font-size: 2rem;
 		align-self: flex-end;
-		margin-left: 6px;
-		margin-right: 0;
 	}
 </style>

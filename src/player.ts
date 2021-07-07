@@ -20,6 +20,9 @@ class Player extends Animal {
     frameCurTimer: 0,
     frameDuration: 3,
   };
+  life: number = 3;
+  spell: number = 0;
+  power: number = 0;
   constructor(
     x: number,
     y: number,

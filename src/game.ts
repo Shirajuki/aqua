@@ -18,6 +18,7 @@ class Game {
   spawnTimer: number = 0;
   spawnCount: number = 0;
   enemyWavePattern: any[];
+  score: number = 0;
   constructor() {
     this.state = 0;
     this.player = new Player(100, 100, 8, 8, 'red');
@@ -94,6 +95,7 @@ class Game {
       const enemy = this.enemies[i];
       enemy.logic(ctx);
       if (enemy.outOfRange2 || enemy.dead) {
+        this.score += 10000;
         explosion({
           x: enemy.x + enemy.width / 2,
           y: enemy.y + enemy.height / 2,
