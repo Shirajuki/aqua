@@ -18,6 +18,8 @@ export default class Boss extends Enemy {
   speed: number = 0;
   arrived: boolean = false;
   dead: boolean = false;
+  maxHp: number = 0;
+  hpPercent: number = 380;
   constructor(
     x: number,
     y: number,
@@ -34,6 +36,7 @@ export default class Boss extends Enemy {
     // Behaviour Logics s.t. movements and different attack patterns
     this.behaviourLogic = behaviourLogic;
     this.updateBulletType();
+    this.maxHp = hp;
   }
   updateBulletType() {
     const { cooldown, pattern } =
@@ -96,6 +99,23 @@ export default class Boss extends Enemy {
     // Animate and draw enemy
     this.animate();
     this.draw(ctx);
+    this.drawBossHp(ctx);
+  }
+  drawBossHp(ctx: any) {
+    ctx.beginPath();
+    ctx.fillStyle = this.color;
+    ctx.rect(530, 470, 380, 40);
+    ctx.fill();
+
+    // Lerp hp bar drain
+    this.hpPercent =
+      (1 - 0.1) * this.hpPercent + 0.1 * ((380 * this.hp) / this.maxHp);
+    ctx.beginPath();
+    ctx.fillStyle = 'rgba(200,0,0,0.7)';
+    ctx.rect(530, 470, this.hpPercent, 40);
+    ctx.fill();
+    if (this.sprite.complete)
+      ctx.drawImage(this.sprite, 0, 0, 430, 245, 500, 455, 103, 58);
   }
   hit() {
     this.hp--;
@@ -118,7 +138,7 @@ export default class Boss extends Enemy {
       // Shoot using bullet pattern
       this.pattern({
         x: this.x,
-        y: this.y + this.width / 2 + 4,
+        y: this.y + this.height / 2 + 4,
         size: 8,
         cooldown: this.cooldown,
         bulletArr: this.bullets,

@@ -82,6 +82,7 @@ export const ripple = ({
   amount,
   particleArr,
 }: IParticlePattern) => {
+  var size = 10;
   for (let i = 1; i <= amount; i++) {
     const speed = Math.random() * 5;
     let angle = Math.PI * 2;

@@ -85,12 +85,10 @@ export default class Enemy extends Animal {
     this.draw(ctx);
   }
   draw(ctx: any) {
-    /*
-		ctx.beginPath();
+    ctx.beginPath();
     ctx.fillStyle = this.color;
     ctx.rect(this.x, this.y, this.width, this.height);
     ctx.fill();
-		*/
     if (this.sprite.complete)
       ctx.drawImage(
         this.sprite,
