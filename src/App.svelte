@@ -27,7 +27,7 @@
 				ctx.clearRect(0, 0, canvas.width, canvas.height);
 				// Draw number to the screen
 				ctx.font = '25px Arial';
-				ctx.fillStyle = 'black';
+				ctx.fillStyle = "#fff";
 				ctx.fillText('FPS: ' + fps, canvas.width - 100, canvas.height - 10);
 				// Add score
 				game.score++;

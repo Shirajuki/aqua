@@ -3,7 +3,6 @@ import Enemy from './enemy';
 import Boss from './boss';
 import type Bullet from './bullet';
 import * as bp from './bulletPatterns';
-
 import { stillLogic, linearLogic } from './behaviourLogics';
 import type Particle from './particle';
 import { explosion, ripple } from './particle';

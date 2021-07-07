@@ -1,6 +1,7 @@
 import Enemy from './enemy';
 import type Bullet from './bullet';
 import type Player from './player';
+import { lerp } from './utilities';
 
 export default class Boss extends Enemy {
   outOfRange: boolean = false;
@@ -108,8 +109,7 @@ export default class Boss extends Enemy {
     ctx.fill();
 
     // Lerp hp bar drain
-    this.hpPercent =
-      (1 - 0.1) * this.hpPercent + 0.1 * ((380 * this.hp) / this.maxHp);
+    this.hpPercent = lerp(this.hpPercent, (380 * this.hp) / this.maxHp, 0.1);
     ctx.beginPath();
     ctx.fillStyle = 'rgba(200,0,0,0.7)';
     ctx.rect(530, 470, this.hpPercent, 40);

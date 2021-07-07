@@ -58,7 +58,7 @@ export const explosion = ({
   particleArr,
 }: IParticlePattern) => {
   for (let i = 1; i <= amount; i++) {
-    const speed = Math.random() * 5;
+    const speed = Math.random() * 7;
     let angle = Math.random() * Math.PI * 2;
     particleArr.push(
       new Particle(

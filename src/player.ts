@@ -1,5 +1,6 @@
 import Animal from './animal';
 import Bullet from './bullet';
+import { lerp } from './utilities';
 
 class Player extends Animal {
   height = this.width;
@@ -20,6 +21,10 @@ class Player extends Animal {
     frameCurTimer: 0,
     frameDuration: 3,
   };
+  // Rotate player on movement
+  rotateSpeed: number = 0.5;
+  rotate: number = 0;
+  // Player stats
   life: number = 3;
   spell: number = 0;
   power: number = 0;
@@ -54,17 +59,20 @@ class Player extends Animal {
     } else this.cooldown.shootingCur++;
   }
   draw(ctx: any) {
-    /*
-    ctx.beginPath();
-    ctx.fillStyle = this.color;
-    ctx.rect(
-      this.x - this.width * 2,
-      this.y - this.height * 2,
-      this.width * 4,
-      this.height * 4
-    );
-    ctx.fill();
-		*/
+    // Handle player rotation smoothly using lerp
+    if (this.movement.right && this.rotate > -4)
+      this.rotate = lerp(this.rotate, this.rotate - this.rotateSpeed, 0.5);
+    else if (this.movement.left && this.rotate < 3)
+      this.rotate = lerp(this.rotate, this.rotate + this.rotateSpeed, 0.5);
+    else if (this.rotate > 0)
+      this.rotate = lerp(this.rotate, this.rotate - this.rotateSpeed, 0.5);
+    else if (this.rotate < 0)
+      this.rotate = lerp(this.rotate, this.rotate + this.rotateSpeed, 0.5);
+    ctx.save();
+    // Translate the origin to the center of the image
+    ctx.translate(this.x - 60 + 100 / 2, this.y - 80 + 133 / 2);
+    // Rotate player
+    ctx.rotate((this.rotate * Math.PI) / 180);
     if (this.sprite.complete)
       ctx.drawImage(
         this.sprite,
@@ -72,11 +80,12 @@ class Player extends Animal {
         524 * this.animation.curFrame,
         408,
         524,
-        this.x - 60,
-        this.y - 80,
+        -100 / 2, // Draw by negative width/2 and height/2
+        -133 / 2,
         100,
         133
       );
+    ctx.restore();
     ctx.beginPath();
     ctx.fillStyle = 'aqua';
     ctx.arc(this.x, this.y, this.width, 0, 2 * Math.PI);
