@@ -22,8 +22,8 @@ class Player extends Animal {
     frameDuration: 3,
   };
   // Rotate player on movement
-  rotateSpeed: number = 0.5;
-  rotate: number = 0;
+  leanSpeed: number = 0.5;
+  lean: number = 0;
   // Player stats
   life: number = 3;
   spell: number = 0;
@@ -59,20 +59,20 @@ class Player extends Animal {
     } else this.cooldown.shootingCur++;
   }
   draw(ctx: any) {
-    // Handle player rotation smoothly using lerp
-    if (this.movement.right && this.rotate > -4)
-      this.rotate = lerp(this.rotate, this.rotate - this.rotateSpeed, 0.5);
-    else if (this.movement.left && this.rotate < 3)
-      this.rotate = lerp(this.rotate, this.rotate + this.rotateSpeed, 0.5);
-    else if (this.rotate > 0)
-      this.rotate = lerp(this.rotate, this.rotate - this.rotateSpeed, 0.5);
-    else if (this.rotate < 0)
-      this.rotate = lerp(this.rotate, this.rotate + this.rotateSpeed, 0.5);
+    // Handle player leaning smoothly using lerp
+    if (this.movement.right && this.lean > -4)
+      this.lean = lerp(this.lean, this.lean - this.leanSpeed, 0.5);
+    else if (this.movement.left && this.lean < 3)
+      this.lean = lerp(this.lean, this.lean + this.leanSpeed, 0.5);
+    else if (this.lean > 0)
+      this.lean = lerp(this.lean, this.lean - this.leanSpeed, 0.5);
+    else if (this.lean < 0)
+      this.lean = lerp(this.lean, this.lean + this.leanSpeed, 0.5);
     ctx.save();
     // Translate the origin to the center of the image
     ctx.translate(this.x - 60 + 100 / 2, this.y - 80 + 133 / 2);
     // Rotate player
-    ctx.rotate((this.rotate * Math.PI) / 180);
+    ctx.rotate((this.lean * Math.PI) / 180);
     if (this.sprite.complete)
       ctx.drawImage(
         this.sprite,
