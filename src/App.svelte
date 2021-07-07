@@ -30,59 +30,8 @@
 				ctx.font = '25px Arial';
 				ctx.fillStyle = 'black';
 				ctx.fillText('FPS: ' + fps, canvas.width - 100, canvas.height - 10);
+				game.draw(ctx);
 				
-				// Game bullets
-				for (let i = game.bullets.length-1; i >= 0; i--) {
-					const bullet = game.bullets[i];
-					bullet.move();
-					bullet.draw(ctx);
-					if (bullet.outOfRange) game.bullets.splice(i, 1);
-					else if (bullet.collisionC(player)) {
-						game.bullets.splice(i, 1);
-						player.hit();
-					}
-				}
-				// Player bullets
-				for (let i = player.bullets.length - 1; i >= 0; i--) {
-					const bullet = player.bullets[i];
-					bullet.move();
-					bullet.draw(ctx);
-					if (bullet.outOfRange) player.bullets.splice(i, 1);
-				}
-				// Particles
-				for (let i = game.particles.length - 1; i >= 0; i--) {
-					const particle = game.particles[i];
-					particle.move();
-					particle.draw(ctx);
-					if (particle.outOfRange) game.particles.splice(i, 1);
-				}
-				// Enemies
-				for (let i = game.enemies.length - 1; i >= 0; i--) {
-					const enemy = game.enemies[i];
-					enemy.logic(ctx);
-					if (enemy.outOfRange2 || enemy.dead) {
-						explosion({
-							x: enemy.x + enemy.width / 2,
-							y: enemy.y + enemy.height / 2,
-							size: 10,
-							amount: Math.max(enemy.width/4, 30),
-							particleArr: game.particles
-						});
-						game.enemies.splice(i, 1);
-						continue;
-					}
-					// Player bullet collision with enemy
-					for (let j = player.bullets.length - 1; j >= 0; j--) {
-						const bullet = player.bullets[j];
-						if (enemy.collision(bullet)) {
-							player.bullets.splice(j, 1);
-							enemy.hit();
-						}
-					}
-				}
-				// Player movement
-				player.logic(ctx);
-
 				// Camera & background
 				scroll.x += ((-player.x - scroll.x + 200) / 150);
 				scroll.y += ((player.y - scroll.y - 320) / 100);

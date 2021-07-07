@@ -6,6 +6,7 @@ import * as bp from './bulletPatterns';
 
 import { stillLogic, linearLogic } from './behaviourLogics';
 import type Particle from './particle';
+import { explosion, ripple } from './particle';
 
 class Game {
   state: number;
@@ -61,6 +62,66 @@ class Game {
       },
     ];
     // setTimeout(() => this.addEnemy(), 2000);
+  }
+  draw(ctx: any) {
+    // Game bullets
+    for (let i = this.bullets.length - 1; i >= 0; i--) {
+      const bullet = this.bullets[i];
+      bullet.move();
+      bullet.draw(ctx);
+      if (bullet.outOfRange) this.bullets.splice(i, 1);
+      else if (bullet.collisionC(this.player)) {
+        this.bullets.splice(i, 1);
+        this.player.hit();
+      }
+    }
+    // Player bullets
+    for (let i = this.player.bullets.length - 1; i >= 0; i--) {
+      const bullet = this.player.bullets[i];
+      bullet.move();
+      bullet.draw(ctx);
+      if (bullet.outOfRange) this.player.bullets.splice(i, 1);
+    }
+    // Particles
+    for (let i = this.particles.length - 1; i >= 0; i--) {
+      const particle = this.particles[i];
+      particle.move();
+      particle.draw(ctx);
+      if (particle.outOfRange) this.particles.splice(i, 1);
+    }
+    // Enemies
+    for (let i = this.enemies.length - 1; i >= 0; i--) {
+      const enemy = this.enemies[i];
+      enemy.logic(ctx);
+      if (enemy.outOfRange2 || enemy.dead) {
+        explosion({
+          x: enemy.x + enemy.width / 2,
+          y: enemy.y + enemy.height / 2,
+          size: 10,
+          amount: Math.max(enemy.width / 4, 30),
+          particleArr: this.particles,
+        });
+        this.enemies.splice(i, 1);
+        continue;
+      }
+      // Player bullet collision with enemy
+      for (let j = this.player.bullets.length - 1; j >= 0; j--) {
+        const bullet = this.player.bullets[j];
+        if (enemy.collision(bullet)) {
+          this.player.bullets.splice(j, 1);
+          enemy.hit();
+        }
+      }
+    }
+    // Player movement
+    this.player.logic(ctx);
+    ripple({
+      x: this.player.x - 30,
+      y: this.player.y + 20,
+      size: 4,
+      amount: 1,
+      particleArr: this.particles,
+    });
   }
   addEnemy() {
     let timer = 0;
