@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Game from './game';
-	import {explosion} from './particle';
 
 	let canvas: any;
 	let bg: any;
@@ -77,21 +76,56 @@
 	};
 </script>
 
-<div class="viewport">
-	<img bind:this={sky0} class="sky" src="/images/sky.png" alt="sky0">
-	<img bind:this={sky1} class="sky" src="/images/sky.png" alt="sky1">
-	<img bind:this={bg} class="bg" src="/images/bg.png" alt="background">
+<div class="game">
+	<div class="viewport">
+		<img bind:this={sky0} class="sky" src="/images/sky.png" alt="sky0">
+		<img bind:this={sky1} class="sky" src="/images/sky.png" alt="sky1">
+		<img bind:this={bg} class="bg" src="/images/bg.png" alt="background">
+	</div>
+	<canvas bind:this={canvas} width={924} height={520} />
+	<div class="gui">
+		<div class="life">
+			<p>life</p>
+			<span class="heart"></span>
+			<span class="heart"></span>
+			<span class="heart"></span>
+		</div>
+		<div class="mana">
+			<p>mana</p>
+			<span class="star"></span>
+			<span class="star"></span>
+			<span class="star"></span>
+		</div>
+		<div class="power">
+			<p>power</p>
+			<span class="sword"></span>
+			<span class="sword"></span>
+			<span class="sword"></span>
+			<span class="sword"></span>
+		</div>
+		<div class="score">
+			<p>score</p>
+			<p class="scorec">000123456789</p>
+		</div>
+	</div>
 </div>
-<canvas bind:this={canvas} width={924} height={520} />
 
 <style>
-	canvas {
-		background-color: transparent;
-		border: 1px solid black;
+	div.game {
 		position: absolute;
 		left: 50%;
 		top: 50%;
 		transform: translate(-50%, -50%);
+		width: 924px;
+		height: 520px;
+	}
+	canvas {
+		background-color: transparent;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		border: 1px solid black;
 	}
 	div.viewport {
 		position: absolute;
@@ -109,5 +143,52 @@
 		position: absolute;
 		width: 1140px;
 		z-index: 1;
+	}
+	div.gui {
+		display: flex;
+		justify-content: center;
+		position: absolute;
+		top: 0;
+		width: 924px;
+		background-color: rgba(0,0,0,0.4);
+		color: #fff;
+		font-size: 1.6rem;
+		font-family: setofont, monotype, sans-serif;
+		font-weight: 700;
+		padding: 8px
+	}
+	div.gui > div {
+		display: flex;
+	}
+	div.gui > div > p {
+		margin-right: 4px;
+	}
+	div.gui > div:not(:first-child) > p:first-of-type {
+		margin-left: 10px;
+	}
+	div.gui > div > span {
+		display: block;
+		width: 40px;
+		background-size: 100% 100%;
+		align-self: flex-end;
+		margin-left: 3px;
+	}
+	span.heart {
+		background-image: url(/images/heart.svg);
+		height: 28px;
+	}
+	span.star{
+		background-image: url(/images/star.svg);
+		height: 38px;
+	}
+	span.sword{
+		background-image: url(/images/sword.svg);
+		height: 35px;
+	}
+	p.scorec {
+		font-size: 2rem;
+		align-self: flex-end;
+		margin-left: 6px;
+		margin-right: 0;
 	}
 </style>
