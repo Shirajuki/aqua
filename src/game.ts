@@ -20,7 +20,7 @@ class Game {
   score: number = 0;
   constructor() {
     this.state = 0;
-    this.player = new Player(100, 100, 8, 8, 'red');
+    this.player = new Player(100, 100, 8, 8, 'aqua');
     this.bullets = [];
     this.particles = [];
 
@@ -71,8 +71,10 @@ class Game {
       bullet.draw(ctx);
       if (bullet.outOfRange) this.bullets.splice(i, 1);
       else if (bullet.collisionC(this.player)) {
-        this.bullets.splice(i, 1);
-        this.player.hit();
+        if (!this.player.invulnerable) {
+          this.bullets.splice(i, 1);
+          this.player.hit();
+        }
       }
     }
     // Player bullets

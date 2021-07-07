@@ -58,7 +58,7 @@
 			cancelAnimationFrame(frame);
 		};
 	});
-
+	
 	document.onkeydown = (event) => {
 		if (event.key === 'ArrowRight') player.movement.right = true;
 		else if (event.key === 'ArrowUp') player.movement.up = true;
@@ -85,6 +85,7 @@
 		<img bind:this={sky1} class="sky" src="/images/sky.png" alt="sky1">
 		<img bind:this={bg} class="bg" src="/images/bg.png" alt="background">
 	</div>
+	<canvas bind:this={canvas} width={924} height={520} />
 	<div class="gui">
 		<div>
 			<div class="score">
@@ -92,26 +93,25 @@
 				<p class="scorec">{String(game.score).padStart(9, '0')}</p>
 			</div>
 			<div class="life">
-				<span class="heart"></span>
-				<span class="heart"></span>
-				<span class="heart"></span>
+				<span class="heart {game.player.life <= 0 ? "hidden" : ""}"></span>
+				<span class="heart {game.player.life <= 1 ? "hidden" : ""}"></span>
+				<span class="heart {game.player.life <= 2 ? "hidden" : ""}"></span>
 			</div>
 		</div>
 		<div>
 			<div class="mana">
-				<span class="star"></span>
-				<span class="star"></span>
-				<span class="star"></span>
+				<span class="star" style="background-position-x: {game.player.spell < 1 ? (1 - game.player.spell) * 30 | 0 : 0}px; transform: translateX(-{game.player.spell < 1 ? (1 - game.player.spell) * 30 | 0 : 0}px);"></span>
+				<span class="star" style="background-position-x: {game.player.spell < 2 ? (2 - game.player.spell) * 30 | 0 : 0}px; transform: translateX(-{game.player.spell < 2 ? (2 - game.player.spell) * 30 | 0 : 0}px);"></span>
+				<span class="star" style="background-position-x: {game.player.spell < 3 ? (3 - game.player.spell) * 30 | 0 : 0}px; transform: translateX(-{game.player.spell < 3 ? (3 - game.player.spell) * 30 | 0 : 0}px);"></span>
 			</div>
 			<div class="power">
 				<span class="sword"></span>
-				<span class="sword"></span>
-				<span class="sword"></span>
-				<span class="sword"></span>
+				<span class="sword" style="background-position-x: {game.player.power < 2 ? (2 - game.player.power) * 30 | 0 : 0}px; transform: translateX(-{game.player.power < 2 ? (2 - game.player.power) * 30 | 0 : 0}px);"></span>
+				<span class="sword" style="background-position-x: {game.player.power < 3 ? (3 - game.player.power) * 30 | 0 : 0}px; transform: translateX(-{game.player.power < 3 ? (3 - game.player.power) * 30 | 0 : 0}px);"></span>
+				<span class="sword" style="background-position-x: {game.player.power < 4 ? (4 - game.player.power) * 30 | 0 : 0}px; transform: translateX(-{game.player.power < 4 ? (4 - game.player.power) * 30 | 0 : 0}px);"></span>
 			</div>
 		</div>
 	</div>
-	<canvas bind:this={canvas} width={924} height={520} />
 </div>
 
 <style>
@@ -175,6 +175,10 @@
 		display: block;
 		width: 30px;
 		background-size: 100% 100%;
+		background-repeat: no-repeat;
+	}
+	div.gui > div span.hidden {
+		background-position-x: 30px;
 	}
 	div.gui > div > div.score {
 		flex-direction: column;

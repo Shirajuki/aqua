@@ -3,6 +3,7 @@ import Bullet from './bullet';
 import { lerp } from './utilities';
 
 class Player extends Animal {
+  // Movement values
   height = this.width;
   movement = { left: false, up: false, right: false, down: false };
   shooting = true;
@@ -13,6 +14,7 @@ class Player extends Animal {
     shootingCur: 0,
     shootingMax: 5,
   };
+  // Animation
   sprite = new Image();
   animation = {
     curFrame: 0,
@@ -26,8 +28,11 @@ class Player extends Animal {
   lean: number = 0;
   // Player stats
   life: number = 3;
-  spell: number = 0;
-  power: number = 0;
+  spell: number = 1;
+  power: number = 1;
+  // Other values
+  invulnerable: boolean = false;
+  invulnerableTimer: number = 0;
   constructor(
     x: number,
     y: number,
@@ -36,19 +41,14 @@ class Player extends Animal {
     color: string
   ) {
     super(x, y, width, height, color);
-    this.sprite.src = '/images/aqua_sprite.png';
+    this.sprite.src = '/images/aqua_sprite2.png';
   }
   move() {
-    // Maybe set this to constant v
-    const i = this.focusing ? 1 : 0;
-    if (this.movement.left && this.x - this.velocity[i] - this.width * 2 > 0)
-      this.x -= this.velocity[i];
-    if (this.movement.up && this.y - this.velocity[i] - this.height * 2 > 50)
-      this.y -= this.velocity[i];
-    if (this.movement.right && this.x + this.velocity[i] < 924 - this.width * 2)
-      this.x += this.velocity[i];
-    if (this.movement.down && this.y + this.velocity[i] < 520 - this.height * 2)
-      this.y += this.velocity[i];
+    const v = this.velocity[this.focusing ? 1 : 0];
+    if (this.movement.left && this.x - v - this.width * 2 > 0) this.x -= v;
+    if (this.movement.up && this.y - v - this.height * 2 > 50) this.y -= v;
+    if (this.movement.right && this.x + v < 924 - this.width * 2) this.x += v;
+    if (this.movement.down && this.y + v < 520 - this.height * 2) this.y += v;
   }
   shoot() {
     if (this.cooldown.shootingCur >= this.cooldown.shootingMax) {
@@ -76,7 +76,7 @@ class Player extends Animal {
     if (this.sprite.complete)
       ctx.drawImage(
         this.sprite,
-        0,
+        this.invulnerable && this.invulnerableTimer > 3 ? 410 : 0,
         524 * this.animation.curFrame,
         408,
         524,
@@ -85,9 +85,11 @@ class Player extends Animal {
         100,
         133
       );
+    if (this.invulnerableTimer > 6) this.invulnerableTimer = 0;
+    else this.invulnerableTimer++;
     ctx.restore();
     ctx.beginPath();
-    ctx.fillStyle = 'aqua';
+    ctx.fillStyle = this.color;
     ctx.arc(this.x, this.y, this.width, 0, 2 * Math.PI);
     ctx.fill();
   }
@@ -106,8 +108,14 @@ class Player extends Animal {
     this.draw(ctx);
   }
   hit() {
+    // Add invis on a timer
     this.color = 'white';
-    setTimeout(() => (this.color = 'red'), 500);
+    this.invulnerable = true;
+    setTimeout(() => {
+      this.color = 'aqua';
+      this.invulnerable = false;
+    }, 2500); // 2.5 second invulnerable frame
+    this.life--;
     console.log(1);
   }
 }
