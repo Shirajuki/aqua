@@ -24,7 +24,7 @@ class Game {
     this.bullets = [];
     this.particles = [];
 
-    let enemy = new Boss(
+    let boss = new Boss(
       600,
       200,
       400,
@@ -33,10 +33,10 @@ class Game {
       this.bullets,
       this.player,
       bp.spread5LockOn,
-      undefined,
+      linearLogic(),
       100
     );
-    this.enemies = [enemy];
+    this.enemies = [boss];
 
     this.enemyWavePattern = [
       {
@@ -44,19 +44,19 @@ class Game {
           {
             x: 800,
             y: 100,
-            width: 50,
-            height: 50,
+            width: 120,
+            height: 70,
             color: 'orange',
             bulletType: bp.linearAim,
             hp: 15,
           },
         ],
         spawner: [
-          { enemyIndex: 0, timeToSpawn: 1000 },
-          { enemyIndex: 0, timeToSpawn: 1000 },
-          { enemyIndex: 0, timeToSpawn: 1000 },
-          { enemyIndex: 0, timeToSpawn: 1000 },
-          { enemyIndex: 0, timeToSpawn: 1000 },
+          { enemyIndex: 0, timeToSpawn: 2000 },
+          { enemyIndex: 0, timeToSpawn: 2000 },
+          { enemyIndex: 0, timeToSpawn: 2000 },
+          { enemyIndex: 0, timeToSpawn: 2000 },
+          { enemyIndex: 0, timeToSpawn: 2000 },
         ],
         waveDuration: 2000,
       },
@@ -146,6 +146,7 @@ class Game {
       );
       setTimeout(() => {
         this.enemies.push(newEnemy);
+        console.log('spawn');
       }, timer);
       timer += timeToSpawn;
     }

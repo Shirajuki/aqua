@@ -1,17 +1,8 @@
 import * as bp from './bulletPatterns';
+import * as easing from './easing';
 
-export const stillLogic: IBulletType = {
-  cooldown: {
-    shootingCur: 0,
-    shootingMax: 5, // Delay between shots
-    burstCur: 0,
-    burstMax: 10, // Shoot 10 times then wait for cooldown
-    burstTimeCur: 0,
-    BurstTimeMax: 150,
-  },
-  pattern: () => {
-    console.log(123);
-  },
+export const stillLogic: () => IBehaviourLogic = () => {
+  return undefined;
 };
 
 export const linearLogic: () => IBehaviourLogic = () => {
@@ -21,25 +12,28 @@ export const linearLogic: () => IBehaviourLogic = () => {
     bulletTypes: [bp.linearLockOn, bp.spread5LockOn],
     behaviour: [
       {
-        duration: 200,
-        path: { x: 100, y: 300 },
+        duration: 2,
+        path: { x: -300, y: 300 },
         bulletType: 1,
-        shootAfter: 50,
+        shootAfter: 1,
         shootAfterPathing: false,
+        easing: easing.easeLinear,
       },
       {
-        duration: 100,
-        path: { y: 400 },
+        duration: 1,
+        path: { y: -400 },
         bulletType: 0,
-        shootAfter: 50,
+        shootAfter: 1,
         shootAfterPathing: false,
+        easing: easing.easeLinear,
       },
       {
-        duration: 300,
-        path: { x: 900 },
+        duration: 3,
+        path: { x: 300, y: 100 },
         bulletType: 0,
         shootAfter: 0,
-        shootAfterPathing: false,
+        shootAfterPathing: true,
+        easing: easing.easeLinear,
       },
     ],
   };

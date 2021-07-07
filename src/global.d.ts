@@ -31,6 +31,7 @@ interface IBehaviour {
   bulletType: number;
   shootAfter: number;
   shootAfterPathing: boolean;
+  easing: (t: number, b: number, c: number, d: number) => number;
 }
 // BehaviourLogic interface
 interface IBehaviourLogic {

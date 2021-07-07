@@ -3,6 +3,10 @@ import type Bullet from './bullet';
 import type Player from './player';
 import { lerp } from './utilities';
 
+const easeLinear = (t: number, b: number, c: number, d: number): number => {
+  return (c * t) / d + b;
+};
+
 export default class Boss extends Enemy {
   outOfRange: boolean = false;
   outOfRange2: boolean = false;
@@ -21,6 +25,8 @@ export default class Boss extends Enemy {
   dead: boolean = false;
   maxHp: number = 0;
   hpPercent: number = 380;
+  oldX: number = 0;
+  oldY: number = 0;
   constructor(
     x: number,
     y: number,
@@ -38,6 +44,9 @@ export default class Boss extends Enemy {
     this.behaviourLogic = behaviourLogic;
     this.updateBulletType();
     this.maxHp = hp;
+
+    this.oldX = this.x;
+    this.oldY = this.y;
   }
   updateBulletType() {
     const { cooldown, pattern } =
@@ -47,6 +56,11 @@ export default class Boss extends Enemy {
     this.cooldown = cooldown;
     this.pattern = pattern;
     this.target = [this.player.x, this.player.y];
+    if (
+      !this.behaviourLogic?.behaviour[this.behaviourLogic?.state]
+        ?.shootAfterPathing
+    )
+      this.cooldown.burstTimeCur = this.cooldown.BurstTimeMax; // Set to begin shooting at once
   }
   logic(ctx: any) {
     // Behaviour logic
@@ -54,42 +68,43 @@ export default class Boss extends Enemy {
       this.behaviourLogic?.behaviour[this.behaviourLogic?.state];
     // If a behaviour logic is found, follow through the logic
     if (behaviour) {
-      // Get the distance from point A to B
-      const x = behaviour.path.x || this.x;
-      const y = behaviour.path.y || this.y;
-      const distance = Math.sqrt(
-        Math.pow(x - this.x, 2) + Math.pow(y - this.y, 2)
+      const x = behaviour.path.x || 0;
+      const y = behaviour.path.y || 0;
+      this.x = behaviour.easing(
+        Math.min(this.behaviourLogic.stateDurationCur, behaviour.duration),
+        this.oldX,
+        x,
+        behaviour.duration
       );
-      // Set the linear speed
-      if (this.speed == 0 && !this.arrived)
-        this.speed = (distance / behaviour.duration) * -1;
-      // Move through the path to point B
-      const angle = Math.atan2(this.y - y, this.x - x);
-      const vx = Math.cos(angle) * this.speed;
-      const vy = Math.sin(angle) * this.speed;
-      this.x += vx;
-      this.y += vy;
+      this.y = behaviour.easing(
+        Math.min(this.behaviourLogic.stateDurationCur, behaviour.duration),
+        this.oldY,
+        y,
+        behaviour.duration
+      );
       // Increment state duration
-      this.behaviourLogic.stateDurationCur++;
+      if (this.behaviourLogic.stateDurationCur < behaviour.duration)
+        this.behaviourLogic.stateDurationCur += 0.01;
       // Shoot while pathing
       if (
-        this.shooting ||
-        (!behaviour.shootAfterPathing &&
-          this.behaviourLogic.stateDurationCur >= behaviour.shootAfter)
+        !behaviour.shootAfterPathing &&
+        this.behaviourLogic.stateDurationCur >= behaviour.shootAfter
       )
         this.shootingLogic();
-      if (distance < Math.abs(this.speed) || this.speed === 0) {
+      if (this.behaviourLogic.stateDurationCur > behaviour.duration) {
         if (!this.arrived) {
           this.arrived = true;
           this.speed = 0;
-          this.behaviourLogic.stateDurationCur = 0;
           this.cooldown.burstTimeCur = this.cooldown.BurstTimeMax; // Set to begin shooting at once
         }
         // Shoot after pathing
         if (behaviour.shootAfterPathing) {
-          if (this.behaviourLogic.stateDurationCur >= behaviour.shootAfter)
+          if (
+            this.behaviourLogic.stateDurationCur - behaviour.duration >=
+            behaviour.shootAfter
+          )
             this.shootingLogic();
-          else this.behaviourLogic.stateDurationCur++;
+          else this.behaviourLogic.stateDurationCur += 0.01;
         } else this.updateState();
       }
     } else {
@@ -167,5 +182,7 @@ export default class Boss extends Enemy {
     this.behaviourLogic.stateDurationCur = 0;
     this.arrived = false;
     this.updateBulletType();
+    this.oldX = this.x;
+    this.oldY = this.y;
   }
 }
