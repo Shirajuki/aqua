@@ -13,7 +13,7 @@ export const testLogic: () => IBehaviourLogic = () => {
     behaviour: [
       {
         duration: 6,
-        path: { x: -1500, y: 600 },
+        path: { x: -1000, y: 600 },
         bulletType: 0,
         shootAfter: 2,
         shootAfterPathing: false,

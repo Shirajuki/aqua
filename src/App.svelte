@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Game from './game';
+import { explosion } from './particle';
 
 	let canvas: any;
 	let bg: any;
@@ -11,17 +12,20 @@
 	const scroll: {x: number, y: number} = { x: 0, y: 0 };
 	const skyScroll: number[] = [0,-1140];
 	(window as any).game = game;
+	(window as any).scroll = scroll;
 	onMount(() => {
 		const ctx = canvas.getContext('2d');
 		let frame: any; // AnimationFrame cancel on unmount / exit
 		let secondsPassed: number, oldTimeStamp: number, fps: number; // FPS
 		const gameLoop = (timeStamp: number) => {
+			var secTime = timeStamp*0.001
 			frame = requestAnimationFrame(gameLoop);
 			// Calculate the number of seconds passed since the last frame
-			secondsPassed = (timeStamp - oldTimeStamp) / 1000;
+			secondsPassed = (timeStamp - oldTimeStamp) * 0.001;
 			oldTimeStamp = timeStamp;
 			// Calculate fps
 			fps = Math.round(1 / secondsPassed);
+			game.dt = secondsPassed*60;
 
 			if (ctx) {
 				ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -35,8 +39,8 @@
 				game.draw(ctx);
 				
 				// Camera & background
-				scroll.x += ((-player.x - scroll.x + 200) / 150);
-				scroll.y += ((player.y - scroll.y - 320) / 100);
+				scroll.x += ((-player.x - scroll.x + 200) / 150)*(game.dt || 1);
+				scroll.y += ((player.y - scroll.y - 320) / 100)*(game.dt || 1);
 				// Limit scroll view to the map on x and y coordinates, snaps to place
 				if (scroll.x > -5) scroll.x = -5;
 				else if (scroll.x < -200) scroll.x = -200
@@ -64,7 +68,8 @@
 		else if (event.key === 'ArrowUp') player.movement.up = true;
 		else if (event.key === 'ArrowLeft') player.movement.left = true;
 		else if (event.key === 'ArrowDown') player.movement.down = true;
-		else if (event.key === 's') player.shooting = true;
+		else if (event.key === 'z') player.shooting = true;
+		else if (event.key === 'x') player.spelling = true;
 		else if (event.key === 'Shift') player.focusing = true;
 		// event.preventDefault();
 	};
@@ -73,8 +78,10 @@
 		else if (event.key === 'ArrowUp') player.movement.up = false;
 		else if (event.key === 'ArrowLeft') player.movement.left = false;
 		else if (event.key === 'ArrowDown') player.movement.down = false;
-		else if (event.key === 's') player.shooting = false;
+		else if (event.key === 'z') player.shooting = false;
+		else if (event.key === 'x') player.spelling = false;
 		else if (event.key === 'Shift') player.focusing = false;
+		else if (event.key === 'c') explosion({x: 450, y: 300, size: 30, amount: 100, particleArr: game.particles});
 		event.preventDefault();
 	};
 </script>
@@ -92,22 +99,22 @@
 				<p class="scorec">{String(game.score).padStart(9, '0')}</p>
 			</div>
 			<div class="life">
-				<span class="heart {game.player.life <= 0 ? "hidden" : ""}"></span>
-				<span class="heart {game.player.life <= 1 ? "hidden" : ""}"></span>
-				<span class="heart {game.player.life <= 2 ? "hidden" : ""}"></span>
+				<span class="heart {game.player.stats.life <= 0 ? "hidden" : ""}"></span>
+				<span class="heart {game.player.stats.life <= 1 ? "hidden" : ""}"></span>
+				<span class="heart {game.player.stats.life <= 2 ? "hidden" : ""}"></span>
 			</div>
 		</div>
 		<div>
 			<div class="mana">
-				<span class="star" style="background-position-x: {game.player.spell < 1 ? (1 - game.player.spell) * 30 | 0 : 0}px; transform: translateX(-{game.player.spell < 1 ? (1 - game.player.spell) * 30 | 0 : 0}px);"></span>
-				<span class="star" style="background-position-x: {game.player.spell < 2 ? (2 - game.player.spell) * 30 | 0 : 0}px; transform: translateX(-{game.player.spell < 2 ? (2 - game.player.spell) * 30 | 0 : 0}px);"></span>
-				<span class="star" style="background-position-x: {game.player.spell < 3 ? (3 - game.player.spell) * 30 | 0 : 0}px; transform: translateX(-{game.player.spell < 3 ? (3 - game.player.spell) * 30 | 0 : 0}px);"></span>
+				<span class="star" style="background-position-x: {game.player.stats.spell < 1 ? (1 - game.player.stats.spell) * 30 | 0 : 0}px; transform: translateX(-{game.player.stats.spell < 1 ? (1 - game.player.stats.spell) * 30 | 0 : 0}px);"></span>
+				<span class="star" style="background-position-x: {game.player.stats.spell < 2 ? (2 - game.player.stats.spell) * 30 | 0 : 0}px; transform: translateX(-{game.player.stats.spell < 2 ? (2 - game.player.stats.spell) * 30 | 0 : 0}px);"></span>
+				<span class="star" style="background-position-x: {game.player.stats.spell < 3 ? (3 - game.player.stats.spell) * 30 | 0 : 0}px; transform: translateX(-{game.player.stats.spell < 3 ? (3 - game.player.stats.spell) * 30 | 0 : 0}px);"></span>
 			</div>
 			<div class="power">
 				<span class="sword"></span>
-				<span class="sword" style="background-position-x: {game.player.power < 2 ? (2 - game.player.power) * 30 | 0 : 0}px; transform: translateX(-{game.player.power < 2 ? (2 - game.player.power) * 30 | 0 : 0}px);"></span>
-				<span class="sword" style="background-position-x: {game.player.power < 3 ? (3 - game.player.power) * 30 | 0 : 0}px; transform: translateX(-{game.player.power < 3 ? (3 - game.player.power) * 30 | 0 : 0}px);"></span>
-				<span class="sword" style="background-position-x: {game.player.power < 4 ? (4 - game.player.power) * 30 | 0 : 0}px; transform: translateX(-{game.player.power < 4 ? (4 - game.player.power) * 30 | 0 : 0}px);"></span>
+				<span class="sword" style="background-position-x: {game.player.stats.power < 2 ? (2 - game.player.stats.power) * 30 | 0 : 0}px; transform: translateX(-{game.player.stats.power < 2 ? (2 - game.player.stats.power) * 30 | 0 : 0}px);"></span>
+				<span class="sword" style="background-position-x: {game.player.stats.power < 3 ? (3 - game.player.stats.power) * 30 | 0 : 0}px; transform: translateX(-{game.player.stats.power < 3 ? (3 - game.player.stats.power) * 30 | 0 : 0}px);"></span>
+				<span class="sword" style="background-position-x: {game.player.stats.power < 4 ? (4 - game.player.stats.power) * 30 | 0 : 0}px; transform: translateX(-{game.player.stats.power < 4 ? (4 - game.player.stats.power) * 30 | 0 : 0}px);"></span>
 			</div>
 		</div>
 	</div>

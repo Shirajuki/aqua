@@ -1,4 +1,5 @@
 import Bullet from './bullet';
+import { lerp } from './utilities';
 
 const getRGBColor = (color: string) => {
   if (color[0] === '#') {
@@ -43,10 +44,60 @@ export default class Particle extends Bullet {
     if (this.lifeTime !== 0) {
       this.lifeTime -= 0.01;
     }
+    this.width = lerp(this.width, 0, 0.005);
     ctx.beginPath();
     ctx.fillStyle = `rgba(${getRGBColor(this.color)},${this.lifeTime})`;
-    ctx.arc(this.x, this.y - this.height / 2, this.width, 0, Math.PI * 2);
+    ctx.arc(this.x, this.y, this.width, 0, Math.PI * 2);
     ctx.fill();
+  }
+}
+export class Ripple extends Particle {
+  draw(ctx: any) {
+    if (this.lifeTime !== 0) {
+      this.lifeTime -= 0.01;
+    }
+    this.width = lerp(this.width, 0, 0.01);
+    ctx.beginPath();
+    ctx.fillStyle = `rgba(${getRGBColor(this.color)},${this.lifeTime})`;
+    ctx.arc(this.x, this.y, this.width, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+export class Shockwave extends Particle {
+  constructor(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    color: string,
+    velocity: number[],
+    acceleration: number[],
+    lifeTime: number
+  ) {
+    super(x, y, width, height, color, velocity, acceleration, lifeTime);
+  }
+  move() {
+    this.velocity[0] *= this.friction;
+    this.x +=
+      Math.cos(this.velocity[1]) * this.velocity[0] + this.acceleration[0];
+    this.y +=
+      Math.sin(this.velocity[1]) * this.velocity[0] + this.acceleration[1];
+    if (
+      !this.outOfRange &&
+      (this.x < 0 || this.x > 1200 || this.y < 0 || this.y > 900)
+    )
+      this.outOfRange = true;
+  }
+  draw(ctx: any) {
+    if (this.lifeTime !== 0) {
+      this.lifeTime -= 0.01;
+    }
+    this.width = lerp(this.width, 100, 0.01);
+    ctx.beginPath();
+    ctx.fillStyle = `rgba(${getRGBColor(this.color)},${this.lifeTime})`;
+    ctx.strokeStyle = this.width;
+    ctx.arc(this.x, this.y, this.width, 0, Math.PI * 2);
+    ctx.stroke();
   }
 }
 export const explosion = ({
@@ -86,7 +137,32 @@ export const ripple = ({
     const speed = Math.random() * 5;
     let angle = Math.PI * 2;
     particleArr.push(
-      new Particle(
+      new Ripple(
+        x,
+        y,
+        Math.random() * size + 5,
+        size,
+        '#ffffff',
+        [speed, angle],
+        [-1, 1],
+        0.4
+      )
+    );
+  }
+};
+export const shockwave = ({
+  x,
+  y,
+  size,
+  amount,
+  particleArr,
+}: IParticlePattern) => {
+  var size = 10;
+  for (let i = 1; i <= amount; i++) {
+    const speed = Math.random() * 5;
+    let angle = Math.PI * 2;
+    particleArr.push(
+      new Shockwave(
         x,
         y,
         Math.random() * size + 5,

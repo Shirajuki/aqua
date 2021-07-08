@@ -88,7 +88,7 @@ export default class Enemy extends Animal {
     )
       this.cooldown.burstTimeCur = this.cooldown.BurstTimeMax; // Set to begin shooting at once
   }
-  logic(ctx: any) {
+  logic(ctx: any, dt: number) {
     // Behaviour logic
     const behaviour =
       this.behaviourLogic?.behaviour[this.behaviourLogic?.state];
@@ -110,13 +110,13 @@ export default class Enemy extends Animal {
       );
       // Increment state duration
       if (this.behaviourLogic.stateDurationCur < behaviour.duration)
-        this.behaviourLogic.stateDurationCur += 0.01;
+        this.behaviourLogic.stateDurationCur += 0.01 * dt;
       // Shoot while pathing
       if (
         !behaviour.shootAfterPathing &&
         this.behaviourLogic.stateDurationCur >= behaviour.shootAfter
       )
-        this.shootingLogic();
+        this.shootingLogic(dt);
       if (this.behaviourLogic.stateDurationCur > behaviour.duration) {
         if (!this.arrived) {
           this.arrived = true;
@@ -129,13 +129,13 @@ export default class Enemy extends Animal {
             this.behaviourLogic.stateDurationCur - behaviour.duration >=
             behaviour.shootAfter
           )
-            this.shootingLogic();
-          else this.behaviourLogic.stateDurationCur += 0.01;
+            this.shootingLogic(dt);
+          else this.behaviourLogic.stateDurationCur += 0.01 * dt;
         } else this.updateState();
       }
     } else {
       // Normal shoot logic
-      this.shootingLogic();
+      this.shootingLogic(dt);
     }
 
     // Animate and draw enemy
@@ -179,17 +179,17 @@ export default class Enemy extends Animal {
       this.dead = true;
     }
   }
-  shootingLogic() {
-    if (this.shooting) this.shoot();
+  shootingLogic(dt: number) {
+    if (this.shooting) this.shoot(dt);
     else {
       if (this.cooldown.burstTimeCur >= this.cooldown.BurstTimeMax) {
         this.cooldown.burstTimeCur = 0;
         this.shooting = true;
         this.target = [this.player.x, this.player.y]; // Set target when begin shooting sequence
-      } else this.cooldown.burstTimeCur++;
+      } else this.cooldown.burstTimeCur += 1 * dt;
     }
   }
-  shoot() {
+  shoot(dt: number) {
     if (this.cooldown.shootingCur >= this.cooldown.shootingMax) {
       // Shoot using bullet pattern
       this.pattern({
@@ -202,7 +202,7 @@ export default class Enemy extends Animal {
         target: this.target,
       });
       this.cooldown.shootingCur = 0;
-      this.cooldown.burstCur++;
+      this.cooldown.burstCur += 1 * dt;
       if (this.cooldown.burstCur >= this.cooldown.burstMax) {
         this.cooldown.burstCur = 0;
         this.shooting = false;
@@ -214,7 +214,7 @@ export default class Enemy extends Animal {
           }
       }
     } else {
-      this.cooldown.shootingCur++;
+      this.cooldown.shootingCur += 1 * dt;
     }
   }
   updateState() {

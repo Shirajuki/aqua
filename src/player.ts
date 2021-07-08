@@ -6,8 +6,9 @@ class Player extends Animal {
   // Movement values
   height = this.width;
   movement = { left: false, up: false, right: false, down: false };
-  shooting = true;
-  focusing = false;
+  shooting: boolean = false;
+  spelling: boolean = false;
+  focusing: boolean = false;
   velocity: number[] = [6, 3]; // [normal, slow]
   bullets: Bullet[] = [];
   cooldown = {
@@ -27,9 +28,11 @@ class Player extends Animal {
   leanSpeed: number = 0.5;
   lean: number = 0;
   // Player stats
-  life: number = 3;
-  spell: number = 1;
-  power: number = 1;
+  stats = {
+    life: 3,
+    spell: 1,
+    power: 1,
+  };
   // Other values
   invulnerable: boolean = false;
   invulnerableTimer: number = 0;
@@ -43,20 +46,29 @@ class Player extends Animal {
     super(x, y, width, height, color);
     this.sprite.src = '/images/aqua_sprite2.png';
   }
-  move() {
-    const v = this.velocity[this.focusing ? 1 : 0];
+  move(dt: number) {
+    const v = this.velocity[this.focusing ? 1 : 0] * dt;
     if (this.movement.left && this.x - v - this.width * 2 > 0) this.x -= v;
     if (this.movement.up && this.y - v - this.height * 2 > 50) this.y -= v;
     if (this.movement.right && this.x + v < 924 - this.width * 2) this.x += v;
     if (this.movement.down && this.y + v < 520 - this.height * 2) this.y += v;
   }
-  shoot() {
+  shoot(dt: number) {
+    if (this.cooldown.shootingCur >= this.cooldown.shootingMax) {
+      if (this.stats.power < 2)
+        this.bullets.push(
+          new Bullet(this.x, this.y, 16, 16, 'blue', [8, 0], [0, 0])
+        );
+      this.cooldown.shootingCur = 0;
+    } else this.cooldown.shootingCur += 1 * dt;
+  }
+  spell(dt: number) {
     if (this.cooldown.shootingCur >= this.cooldown.shootingMax) {
       this.bullets.push(
-        new Bullet(this.x, this.y, 16, 16, 'blue', [8, 0], [0, 0])
+        new Bullet(this.x, this.y, 16, 16, 'red', [8, 0], [0, 0])
       );
       this.cooldown.shootingCur = 0;
-    } else this.cooldown.shootingCur++;
+    } else this.cooldown.shootingCur += 1 * dt;
   }
   draw(ctx: any) {
     // Handle player leaning smoothly using lerp
@@ -101,9 +113,10 @@ class Player extends Animal {
     if (this.animation.curFrame === this.animation.frames)
       this.animation.curFrame = 0;
   }
-  logic(ctx: any) {
-    if (this.shooting) this.shoot();
-    this.move();
+  logic(ctx: any, dt: number) {
+    if (this.spelling) this.spell(dt);
+    if (this.shooting) this.shoot(dt);
+    this.move(dt);
     this.animate();
     this.draw(ctx);
   }
@@ -115,7 +128,7 @@ class Player extends Animal {
       this.color = 'aqua';
       this.invulnerable = false;
     }, 2500); // 2.5 second invulnerable frame
-    this.life--;
+    this.stats.life--;
     console.log(1);
   }
 }

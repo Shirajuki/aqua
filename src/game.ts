@@ -19,6 +19,8 @@ class Game {
   spawnCount: number = 0;
   enemyWavePattern: any[];
   score: number = 0;
+  // Framerate independence using timestamps
+  dt: number = 1; // initial value to 1
   constructor() {
     this.state = 0;
     this.player = new Player(100, 100, 8, 8, 'aqua');
@@ -43,10 +45,10 @@ class Game {
     setTimeout(() => this.addEnemy(), 2000);
   }
   draw(ctx: any) {
-    // Game bullets
+    // Enemy bullets
     for (let i = this.bullets.length - 1; i >= 0; i--) {
       const bullet = this.bullets[i];
-      bullet.move();
+      bullet.move(this.dt);
       bullet.draw(ctx);
       if (bullet.outOfRange) this.bullets.splice(i, 1);
       else if (bullet.collisionC(this.player)) {
@@ -59,7 +61,7 @@ class Game {
     // Player bullets
     for (let i = this.player.bullets.length - 1; i >= 0; i--) {
       const bullet = this.player.bullets[i];
-      bullet.move();
+      bullet.move(this.dt);
       bullet.draw(ctx);
       if (bullet.outOfRange) this.player.bullets.splice(i, 1);
     }
@@ -68,12 +70,13 @@ class Game {
       const particle = this.particles[i];
       particle.move();
       particle.draw(ctx);
-      if (particle.outOfRange) this.particles.splice(i, 1);
+      if (particle.outOfRange || particle.lifeTime <= 0)
+        this.particles.splice(i, 1);
     }
     // Enemies
     for (let i = this.enemies.length - 1; i >= 0; i--) {
       const enemy = this.enemies[i];
-      enemy.logic(ctx);
+      enemy.logic(ctx, this.dt);
       if (enemy.dead) {
         this.score += 10000;
         explosion({
@@ -103,7 +106,7 @@ class Game {
       }
     }
     // Player movement
-    this.player.logic(ctx);
+    this.player.logic(ctx, this.dt);
     ripple({
       x: this.player.x - 30,
       y: this.player.y + 20,

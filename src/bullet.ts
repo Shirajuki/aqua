@@ -18,11 +18,11 @@ export default class Bullet extends Animal {
     this.velocity = velocity;
     this.acceleration = acceleration;
   }
-  move() {
-    this.x += this.velocity[0];
-    this.y += this.velocity[1];
-    this.velocity[0] += this.acceleration[0];
-    this.velocity[1] += this.acceleration[1];
+  move(dt: number) {
+    this.x += this.velocity[0] * dt;
+    this.y += this.velocity[1] * dt;
+    this.velocity[0] += this.acceleration[0] * dt;
+    this.velocity[1] += this.acceleration[1] * dt;
     if (
       !this.outOfRange &&
       (this.x < 0 || this.x > 1200 || this.y < 0 || this.y > 900)
