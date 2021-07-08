@@ -9,31 +9,15 @@ export const testLogic: () => IBehaviourLogic = () => {
   return {
     state: 0,
     stateDurationCur: 0,
-    bulletTypes: [bp.linearLockOn, bp.spread5LockOn],
+    bulletTypes: [bp.linearLockOn],
     behaviour: [
       {
-        duration: 1.4,
-        path: { x: -300, y: 50 },
-        bulletType: 1,
-        shootAfter: 0,
-        shootAfterPathing: true,
-        easing: easing.easeOutQuad,
-      },
-      {
-        duration: 1.4,
-        path: { x: 300, y: 50 },
+        duration: 6,
+        path: { x: -1500, y: 600 },
         bulletType: 0,
-        shootAfter: 4,
+        shootAfter: 2,
         shootAfterPathing: false,
-        easing: easing.easeInQuad,
-      },
-      {
-        duration: 1,
-        path: { x: 900 },
-        bulletType: 0,
-        shootAfter: 4,
-        shootAfterPathing: false,
-        easing: easing.easeLinear,
+        easing: { x: easing.easeLinear, y: easing.easeInOutSine },
       },
     ],
   };
@@ -50,7 +34,7 @@ export const linearLogic: () => IBehaviourLogic = () => {
         bulletType: 0,
         shootAfter: 1,
         shootAfterPathing: false,
-        easing: easing.easeLinear,
+        easing: { x: easing.easeLinear, y: easing.easeLinear },
       },
       {
         duration: 3,
@@ -58,7 +42,7 @@ export const linearLogic: () => IBehaviourLogic = () => {
         bulletType: 0,
         shootAfter: 1,
         shootAfterPathing: false,
-        easing: easing.easeLinear,
+        easing: { x: easing.easeLinear, y: easing.easeLinear },
       },
       {
         duration: 3,
@@ -66,7 +50,7 @@ export const linearLogic: () => IBehaviourLogic = () => {
         bulletType: 0,
         shootAfter: 1,
         shootAfterPathing: false,
-        easing: easing.easeLinear,
+        easing: { x: easing.easeLinear, y: easing.easeLinear },
       },
     ],
   };
@@ -83,7 +67,7 @@ export const inOutLogic: () => IBehaviourLogic = () => {
         bulletType: 1,
         shootAfter: 0,
         shootAfterPathing: true,
-        easing: easing.easeOutQuad,
+        easing: { x: easing.easeOutQuad, y: easing.easeOutQuad },
       },
       {
         duration: 1.4,
@@ -91,7 +75,7 @@ export const inOutLogic: () => IBehaviourLogic = () => {
         bulletType: 0,
         shootAfter: 4,
         shootAfterPathing: false,
-        easing: easing.easeInQuad,
+        easing: { x: easing.easeOutQuad, y: easing.easeOutQuad },
       },
       {
         duration: 1,
@@ -99,7 +83,7 @@ export const inOutLogic: () => IBehaviourLogic = () => {
         bulletType: 0,
         shootAfter: 4,
         shootAfterPathing: false,
-        easing: easing.easeLinear,
+        easing: { x: easing.easeOutQuad, y: easing.easeOutQuad },
       },
     ],
   };
@@ -116,7 +100,7 @@ export const reverseLinearLogic: () => IBehaviourLogic = () => {
         bulletType: 0,
         shootAfter: 1,
         shootAfterPathing: false,
-        easing: easing.easeLinear,
+        easing: { x: easing.easeLinear, y: easing.easeLinear },
       },
       {
         duration: 3,
@@ -124,7 +108,7 @@ export const reverseLinearLogic: () => IBehaviourLogic = () => {
         bulletType: 0,
         shootAfter: 1,
         shootAfterPathing: false,
-        easing: easing.easeLinear,
+        easing: { x: easing.easeLinear, y: easing.easeLinear },
       },
       {
         duration: 3,
@@ -132,7 +116,48 @@ export const reverseLinearLogic: () => IBehaviourLogic = () => {
         bulletType: 0,
         shootAfter: 1,
         shootAfterPathing: false,
-        easing: easing.easeLinear,
+        easing: { x: easing.easeLinear, y: easing.easeLinear },
+      },
+    ],
+  };
+};
+export const waveLogic: () => IBehaviourLogic = () => {
+  return {
+    state: 0,
+    stateDurationCur: 0,
+    bulletTypes: [bp.linearLockOn],
+    behaviour: [
+      {
+        duration: 1,
+        path: { x: -150, y: 70 },
+        bulletType: 0,
+        shootAfter: 4,
+        shootAfterPathing: false,
+        easing: { x: easing.easeLinear, y: easing.easeInOutSine },
+      },
+      {
+        duration: 1,
+        path: { x: -150, y: -70 },
+        bulletType: 0,
+        shootAfter: 4,
+        shootAfterPathing: false,
+        easing: { x: easing.easeLinear, y: easing.easeInOutSine },
+      },
+      {
+        duration: 1,
+        path: { x: -150, y: 70 },
+        bulletType: 0,
+        shootAfter: 0,
+        shootAfterPathing: false,
+        easing: { x: easing.easeLinear, y: easing.easeInOutSine },
+      },
+      {
+        duration: 1,
+        path: { x: -150, y: -70 },
+        bulletType: 0,
+        shootAfter: 4,
+        shootAfterPathing: false,
+        easing: { x: easing.easeLinear, y: easing.easeInOutSine },
       },
     ],
   };

@@ -39,7 +39,7 @@ class Game {
     );
     this.enemies = [];
 
-    this.enemyWavePattern = pattern.testSpawn();
+    this.enemyWavePattern = [pattern.testSpawn()];
     setTimeout(() => this.addEnemy(), 2000);
   }
   draw(ctx: any) {
@@ -82,6 +82,7 @@ class Game {
           size: 10,
           amount: Math.max(enemy.width / 4, 30),
           particleArr: this.particles,
+          speed: Math.min(enemy.width / 40, 7),
         });
         this.enemies.splice(i, 1);
         continue;
@@ -91,9 +92,7 @@ class Game {
         continue;
       }
       // Player collision with enemy, hurts the player too
-      if (enemy.collision(this.player)) {
-        this.player.hit();
-      }
+      if (enemy.collision(this.player)) this.player.hit();
       // Player bullet collision with enemy
       for (let j = this.player.bullets.length - 1; j >= 0; j--) {
         const bullet = this.player.bullets[j];

@@ -1,8 +1,8 @@
 import * as behaviour from './behaviourLogics';
 
-export const testSpawn = () => reverseLinearSpawn();
-export const linearSpawn = () => [
-  {
+export const testSpawn = (): ISpawnPattern => curveDownSpawn();
+export const linearSpawn = (): ISpawnPattern => {
+  return {
     enemies: [
       {
         x: 950,
@@ -11,7 +11,7 @@ export const linearSpawn = () => [
         height: 70,
         color: 'rgba(0,0,0,0.5)',
         behaviour: behaviour.linearLogic,
-        hp: 15,
+        hp: 8,
       },
     ],
     spawner: [
@@ -23,10 +23,10 @@ export const linearSpawn = () => [
       { enemyIndex: 0, timeToSpawn: 2000, pos: { y: 250 } },
     ],
     waveDuration: 2000,
-  },
-];
-export const inOutSpawn = () => [
-  {
+  };
+};
+export const inOutSpawn = (): ISpawnPattern => {
+  return {
     enemies: [
       {
         x: 950,
@@ -47,10 +47,10 @@ export const inOutSpawn = () => [
       { enemyIndex: 0, timeToSpawn: 2000, pos: { y: 100 } },
     ],
     waveDuration: 2000,
-  },
-];
-export const reverseLinearSpawn = () => [
-  {
+  };
+};
+export const reverseLinearSpawn = (): ISpawnPattern => {
+  return {
     enemies: [
       {
         x: -150,
@@ -71,5 +71,55 @@ export const reverseLinearSpawn = () => [
       { enemyIndex: 0, timeToSpawn: 2500, pos: { y: 350 } },
     ],
     waveDuration: 2000,
-  },
-];
+  };
+};
+export const waveSpawn = (): ISpawnPattern => {
+  return {
+    enemies: [
+      {
+        x: 950,
+        y: 250,
+        width: 120,
+        height: 70,
+        color: 'rgba(0,0,0,0.5)',
+        behaviour: behaviour.waveLogic,
+        hp: 8,
+      },
+    ],
+    spawner: [
+      { enemyIndex: 0, timeToSpawn: 0, pos: { y: 360 } },
+      { enemyIndex: 0, timeToSpawn: 1300, pos: { y: 40 } },
+      { enemyIndex: 0, timeToSpawn: 0, pos: { y: 360 } },
+      { enemyIndex: 0, timeToSpawn: 1300, pos: { y: 40 } },
+      { enemyIndex: 0, timeToSpawn: 0, pos: { y: 360 } },
+      { enemyIndex: 0, timeToSpawn: 1300, pos: { y: 40 } },
+      { enemyIndex: 0, timeToSpawn: 0, pos: { y: 360 } },
+      { enemyIndex: 0, timeToSpawn: 1300, pos: { y: 40 } },
+    ],
+    waveDuration: 2000,
+  };
+};
+export const curveDownSpawn = (): ISpawnPattern => {
+  return {
+    enemies: [
+      {
+        x: 950,
+        y: 250,
+        width: 120,
+        height: 70,
+        color: 'rgba(0,0,0,0.5)',
+        behaviour: behaviour.testLogic,
+        hp: 8,
+      },
+    ],
+    spawner: [
+      { enemyIndex: 0, timeToSpawn: 1500, pos: { y: 50 } },
+      { enemyIndex: 0, timeToSpawn: 1500, pos: { y: 50 } },
+      { enemyIndex: 0, timeToSpawn: 1500, pos: { y: 100 } },
+      { enemyIndex: 0, timeToSpawn: 1500, pos: { y: 100 } },
+      { enemyIndex: 0, timeToSpawn: 1500, pos: { y: 150 } },
+      { enemyIndex: 0, timeToSpawn: 1500, pos: { y: 150 } },
+    ],
+    waveDuration: 2000,
+  };
+};

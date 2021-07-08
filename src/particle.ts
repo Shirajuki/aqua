@@ -49,16 +49,16 @@ export default class Particle extends Bullet {
     ctx.fill();
   }
 }
-
 export const explosion = ({
   x,
   y,
   size,
   amount,
   particleArr,
+  speed: spd,
 }: IParticlePattern) => {
   for (let i = 1; i <= amount; i++) {
-    const speed = Math.random() * 7;
+    const speed = Math.random() * (spd || 7);
     let angle = Math.random() * Math.PI * 2;
     particleArr.push(
       new Particle(
@@ -74,7 +74,6 @@ export const explosion = ({
     );
   }
 };
-
 export const ripple = ({
   x,
   y,

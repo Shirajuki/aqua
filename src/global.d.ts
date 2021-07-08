@@ -31,7 +31,10 @@ interface IBehaviour {
   bulletType: number;
   shootAfter: number;
   shootAfterPathing: boolean;
-  easing: (t: number, b: number, c: number, d: number) => number;
+  easing: {
+    x: (t: number, b: number, c: number, d: number) => number;
+    y: (t: number, b: number, c: number, d: number) => number;
+  };
 }
 // BehaviourLogic interface
 interface IBehaviourLogic {
@@ -48,4 +51,24 @@ interface IParticlePattern {
   size: number;
   amount: number;
   particleArr: Particle[];
+  speed?: number;
+}
+// Spawn interface
+interface ISpawnPattern {
+  enemies: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    color: string;
+    behaviour: () => IBehaviourLogic;
+    hp: number;
+    reverse?: boolean;
+  }[];
+  spawner: {
+    enemyIndex: number;
+    timeToSpawn: number;
+    pos: { x?: number; y?: number };
+  }[];
+  waveDuration?: number;
 }
