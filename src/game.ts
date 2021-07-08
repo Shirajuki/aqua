@@ -90,6 +90,10 @@ class Game {
         this.enemies.splice(i, 1);
         continue;
       }
+      // Player collision with enemy, hurts the player too
+      if (enemy.collision(this.player)) {
+        this.player.hit();
+      }
       // Player bullet collision with enemy
       for (let j = this.player.bullets.length - 1; j >= 0; j--) {
         const bullet = this.player.bullets[j];
@@ -127,7 +131,8 @@ class Game {
         this.player,
         ei.bulletType,
         ei.behaviour(),
-        ei.hp
+        ei.hp,
+        ei.reverse || false
       );
       setTimeout(() => {
         this.enemies.push(newEnemy);

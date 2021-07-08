@@ -36,6 +36,7 @@ export default class Enemy extends Animal {
   behaviourLogic: IBehaviourLogic;
   oldX: number = 0;
   oldY: number = 0;
+	reverse: boolean: false;
   // Sprite and animation values
   sprite = new Image();
   animation = {
@@ -55,7 +56,8 @@ export default class Enemy extends Animal {
     player: Player,
     bulletType: IBulletType,
     behaviourLogic: IBehaviourLogic,
-    hp: number
+    hp: number,
+		reverse: boolean = false,
   ) {
     super(x, y, width, height, color);
     this.bullets = bullets;
@@ -70,6 +72,7 @@ export default class Enemy extends Animal {
     this.hp = hp;
     this.oldX = this.x;
     this.oldY = this.y;
+		this.reverse = reverse;
   }
   updateBulletType() {
     const { cooldown, pattern } =
@@ -190,7 +193,7 @@ export default class Enemy extends Animal {
     if (this.cooldown.shootingCur >= this.cooldown.shootingMax) {
       // Shoot using bullet pattern
       this.pattern({
-        x: this.x,
+				x: this.reverse ? this.x + this.width : this.x,
         y: this.y + this.height / 2 + 4,
         size: 8,
         cooldown: this.cooldown,
