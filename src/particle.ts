@@ -64,6 +64,7 @@ export class Ripple extends Particle {
   }
 }
 export class Shockwave extends Particle {
+  lineWidth: number = 6;
   constructor(
     x: number,
     y: number,
@@ -89,13 +90,15 @@ export class Shockwave extends Particle {
       this.outOfRange = true;
   }
   draw(ctx: any) {
-    if (this.lifeTime !== 0) {
-      this.lifeTime -= 0.01;
+    if (this.lineWidth > 0) {
+      this.lineWidth -= 0.1;
+      if (this.lineWidth <= 0) this.lifeTime = 0;
     }
-    this.width = lerp(this.width, 100, 0.01);
+    if (this.lifeTime !== 0) this.lifeTime -= 0.005;
+    this.width = lerp(this.width, 900, 0.01);
     ctx.beginPath();
-    ctx.fillStyle = `rgba(${getRGBColor(this.color)},${this.lifeTime})`;
-    ctx.strokeStyle = this.width;
+    ctx.strokeStyle = `rgba(${getRGBColor(this.color)},${this.lifeTime})`;
+    ctx.lineWidth = this.lineWidth;
     ctx.arc(this.x, this.y, this.width, 0, Math.PI * 2);
     ctx.stroke();
   }
@@ -132,18 +135,16 @@ export const ripple = ({
   amount,
   particleArr,
 }: IParticlePattern) => {
-  var size = 10;
   for (let i = 1; i <= amount; i++) {
     const speed = Math.random() * 5;
-    let angle = Math.PI * 2;
     particleArr.push(
       new Ripple(
         x,
         y,
-        Math.random() * size + 5,
+        Math.random() * size + 8,
         size,
         '#ffffff',
-        [speed, angle],
+        [speed, 0],
         [-1, 1],
         0.4
       )
@@ -157,21 +158,23 @@ export const shockwave = ({
   amount,
   particleArr,
 }: IParticlePattern) => {
-  var size = 10;
   for (let i = 1; i <= amount; i++) {
-    const speed = Math.random() * 5;
-    let angle = Math.PI * 2;
+    const speed = Math.random() * 3;
+    let angle = Math.random() * Math.PI * 2;
     particleArr.push(
-      new Shockwave(
+      new Particle(
         x,
         y,
-        Math.random() * size + 5,
-        size,
+        Math.random() * 15,
+        15,
         '#ffffff',
         [speed, angle],
-        [-1, 1],
-        0.4
+        [0.5, 0],
+        0.5
       )
     );
   }
+  particleArr.push(
+    new Shockwave(x, y, size, size, '#ffffff', [0, 0], [0.5, 0], 0.4)
+  );
 };

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Game from './game';
-import { explosion } from './particle';
+	import { shockwave } from './particle';
 
 	let canvas: any;
 	let bg: any;
@@ -18,7 +18,6 @@ import { explosion } from './particle';
 		let frame: any; // AnimationFrame cancel on unmount / exit
 		let secondsPassed: number, oldTimeStamp: number, fps: number; // FPS
 		const gameLoop = (timeStamp: number) => {
-			var secTime = timeStamp*0.001
 			frame = requestAnimationFrame(gameLoop);
 			// Calculate the number of seconds passed since the last frame
 			secondsPassed = (timeStamp - oldTimeStamp) * 0.001;
@@ -81,7 +80,7 @@ import { explosion } from './particle';
 		else if (event.key === 'z') player.shooting = false;
 		else if (event.key === 'x') player.spelling = false;
 		else if (event.key === 'Shift') player.focusing = false;
-		else if (event.key === 'c') explosion({x: 450, y: 300, size: 30, amount: 100, particleArr: game.particles});
+		else if (event.key === 'c') shockwave({x: 450, y: 300, size: 30, amount: 30, particleArr: game.particles});
 		event.preventDefault();
 	};
 </script>
