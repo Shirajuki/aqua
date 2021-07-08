@@ -85,7 +85,6 @@
 		<img bind:this={sky1} class="sky" src="/images/sky.png" alt="sky1">
 		<img bind:this={bg} class="bg" src="/images/bg.png" alt="background">
 	</div>
-	<canvas bind:this={canvas} width={924} height={520} />
 	<div class="gui">
 		<div>
 			<div class="score">
@@ -112,6 +111,7 @@
 			</div>
 		</div>
 	</div>
+	<canvas bind:this={canvas} width={924} height={520} />
 </div>
 
 <style>

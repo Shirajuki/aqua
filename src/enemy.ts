@@ -5,7 +5,6 @@ import type Player from './player';
 export default class Enemy extends Animal {
   // Other values
   outOfRange: boolean = false;
-  outOfRange2: boolean = false;
   bullets: Bullet[];
   player: Player;
   hp: number = 0;
@@ -165,6 +164,11 @@ export default class Enemy extends Animal {
         this.width,
         this.height
       );
+    if (
+      !this.outOfRange &&
+      (this.x < -200 || this.x > 1200 || this.y < -200 || this.y > 1000)
+    )
+      this.outOfRange = true;
   }
   hit() {
     this.hp--;

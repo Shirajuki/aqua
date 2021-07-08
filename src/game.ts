@@ -3,9 +3,10 @@ import Enemy from './enemy';
 import Boss from './boss';
 import type Bullet from './bullet';
 import * as bp from './bulletPatterns';
-import { stillLogic, linearLogic } from './behaviourLogics';
 import type Particle from './particle';
 import { explosion, ripple } from './particle';
+import { testLogic } from './behaviourLogics';
+import * as pattern from './spawnPatterns';
 
 class Game {
   state: number;
@@ -33,35 +34,13 @@ class Game {
       this.bullets,
       this.player,
       bp.spread5LockOn,
-      linearLogic(),
+      testLogic(),
       100
     );
-    this.enemies = [boss];
+    this.enemies = [];
 
-    this.enemyWavePattern = [
-      {
-        enemies: [
-          {
-            x: 800,
-            y: 100,
-            width: 120,
-            height: 70,
-            color: 'orange',
-            bulletType: bp.linearAim,
-            hp: 15,
-          },
-        ],
-        spawner: [
-          { enemyIndex: 0, timeToSpawn: 2000 },
-          { enemyIndex: 0, timeToSpawn: 2000 },
-          { enemyIndex: 0, timeToSpawn: 2000 },
-          { enemyIndex: 0, timeToSpawn: 2000 },
-          { enemyIndex: 0, timeToSpawn: 2000 },
-        ],
-        waveDuration: 2000,
-      },
-    ];
-    // setTimeout(() => this.addEnemy(), 2000);
+    this.enemyWavePattern = pattern.testSpawn();
+    setTimeout(() => this.addEnemy(), 2000);
   }
   draw(ctx: any) {
     // Game bullets
@@ -95,7 +74,7 @@ class Game {
     for (let i = this.enemies.length - 1; i >= 0; i--) {
       const enemy = this.enemies[i];
       enemy.logic(ctx);
-      if (enemy.outOfRange2 || enemy.dead) {
+      if (enemy.dead) {
         this.score += 10000;
         explosion({
           x: enemy.x + enemy.width / 2,
@@ -104,6 +83,10 @@ class Game {
           amount: Math.max(enemy.width / 4, 30),
           particleArr: this.particles,
         });
+        this.enemies.splice(i, 1);
+        continue;
+      }
+      if (enemy.outOfRange) {
         this.enemies.splice(i, 1);
         continue;
       }
@@ -130,18 +113,20 @@ class Game {
     let timer = 0;
     const wave = this.enemyWavePattern[this.wave];
     for (let i = 0; i < wave.spawner.length; i++) {
+      const pos = wave.spawner[i].pos;
       const enemyIndex = wave.spawner[i].enemyIndex;
       const timeToSpawn = wave.spawner[i].timeToSpawn;
       const ei = wave.enemies[enemyIndex];
       const newEnemy = new Enemy(
-        ei.x,
-        ei.y,
+        pos.x || ei.x,
+        pos.y || ei.y,
         ei.width,
         ei.height,
         ei.color,
         this.bullets,
         this.player,
         ei.bulletType,
+        ei.behaviour(),
         ei.hp
       );
       setTimeout(() => {
