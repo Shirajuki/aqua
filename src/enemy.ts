@@ -1,13 +1,16 @@
 import Animal from './animal';
 import type Bullet from './bullet';
 import type Player from './player';
-import * as ease from './easing';
 
 export default class Enemy extends Animal {
+  // Other values
   outOfRange: boolean = false;
   outOfRange2: boolean = false;
   bullets: Bullet[];
   player: Player;
+  hp: number = 0;
+  // Bullet shooting values
+  dead: boolean = false;
   shooting: boolean = false;
   target: number[];
   pattern: ({
@@ -28,10 +31,13 @@ export default class Enemy extends Animal {
     BurstTimeMax: 100,
   };
   bulletType: IBulletType;
+  // BehaviourLogic values
   speed: number = 0;
   arrived: boolean = false;
-  hp: number = 0;
-  dead: boolean = false;
+  behaviourLogic: IBehaviourLogic;
+  oldX: number = 0;
+  oldY: number = 0;
+  // Sprite and animation values
   sprite = new Image();
   animation = {
     curFrame: 0,
@@ -49,6 +55,7 @@ export default class Enemy extends Animal {
     bullets: Bullet[],
     player: Player,
     bulletType: IBulletType,
+    behaviourLogic: IBehaviourLogic,
     hp: number
   ) {
     super(x, y, width, height, color);
@@ -56,17 +63,82 @@ export default class Enemy extends Animal {
     this.player = player;
     this.sprite.src = '/images/neko_sprite.png';
 
-    // Bullet Pattern
+    // Behaviour Logics such as movements and different attack patterns
+    this.behaviourLogic = behaviourLogic;
     this.bulletType = bulletType;
     this.updateBulletType();
 
     this.hp = hp;
+    this.oldX = this.x;
+    this.oldY = this.y;
   }
   updateBulletType() {
-    const { cooldown, pattern } = this.bulletType;
+    const { cooldown, pattern } =
+      this.behaviourLogic?.bulletTypes[
+        this.behaviourLogic?.behaviour[this.behaviourLogic?.state]?.bulletType
+      ] || this.bulletType;
     this.cooldown = cooldown;
     this.pattern = pattern;
     this.target = [this.player.x, this.player.y];
+    if (
+      !this.behaviourLogic?.behaviour[this.behaviourLogic?.state]
+        ?.shootAfterPathing
+    )
+      this.cooldown.burstTimeCur = this.cooldown.BurstTimeMax; // Set to begin shooting at once
+  }
+  logic(ctx: any) {
+    // Behaviour logic
+    const behaviour =
+      this.behaviourLogic?.behaviour[this.behaviourLogic?.state];
+    // If a behaviour logic is found, follow through the logic
+    if (behaviour) {
+      const x = behaviour.path.x || 0;
+      const y = behaviour.path.y || 0;
+      this.x = behaviour.easing(
+        Math.min(this.behaviourLogic.stateDurationCur, behaviour.duration),
+        this.oldX,
+        x,
+        behaviour.duration
+      );
+      this.y = behaviour.easing(
+        Math.min(this.behaviourLogic.stateDurationCur, behaviour.duration),
+        this.oldY,
+        y,
+        behaviour.duration
+      );
+      // Increment state duration
+      if (this.behaviourLogic.stateDurationCur < behaviour.duration)
+        this.behaviourLogic.stateDurationCur += 0.01;
+      // Shoot while pathing
+      if (
+        !behaviour.shootAfterPathing &&
+        this.behaviourLogic.stateDurationCur >= behaviour.shootAfter
+      )
+        this.shootingLogic();
+      if (this.behaviourLogic.stateDurationCur > behaviour.duration) {
+        if (!this.arrived) {
+          this.arrived = true;
+          this.speed = 0;
+          this.cooldown.burstTimeCur = this.cooldown.BurstTimeMax; // Set to begin shooting at once
+        }
+        // Shoot after pathing
+        if (behaviour.shootAfterPathing) {
+          if (
+            this.behaviourLogic.stateDurationCur - behaviour.duration >=
+            behaviour.shootAfter
+          )
+            this.shootingLogic();
+          else this.behaviourLogic.stateDurationCur += 0.01;
+        } else this.updateState();
+      }
+    } else {
+      // Normal shoot logic
+      this.shootingLogic();
+    }
+
+    // Animate and draw enemy
+    this.animate();
+    this.draw(ctx);
   }
   animate() {
     if (this.animation.frameCurTimer >= this.animation.frameDuration) {
@@ -75,14 +147,6 @@ export default class Enemy extends Animal {
     } else this.animation.frameCurTimer += this.animation.frameSpeed;
     if (this.animation.curFrame === this.animation.frames)
       this.animation.curFrame = 0;
-  }
-  logic(ctx: any) {
-    this.shootingLogic();
-    this.x -= ease.easeInQuad(1.2);
-    this.y += ease.easeInQuad(0.8);
-    // Animate and draw enemy
-    this.animate();
-    this.draw(ctx);
   }
   draw(ctx: any) {
     ctx.beginPath();
@@ -123,7 +187,7 @@ export default class Enemy extends Animal {
       // Shoot using bullet pattern
       this.pattern({
         x: this.x,
-        y: this.y + this.width / 2 + 4,
+        y: this.y + this.height / 2 + 4,
         size: 8,
         cooldown: this.cooldown,
         bulletArr: this.bullets,
@@ -135,9 +199,24 @@ export default class Enemy extends Animal {
       if (this.cooldown.burstCur >= this.cooldown.burstMax) {
         this.cooldown.burstCur = 0;
         this.shooting = false;
+        const behaviour =
+          this.behaviourLogic?.behaviour[this.behaviourLogic?.state];
+        if (behaviour)
+          if (behaviour.shootAfterPathing) {
+            this.updateState();
+          }
       }
     } else {
       this.cooldown.shootingCur++;
     }
+  }
+  updateState() {
+    this.behaviourLogic.state =
+      (this.behaviourLogic.state + 1) % this.behaviourLogic.behaviour.length;
+    this.behaviourLogic.stateDurationCur = 0;
+    this.arrived = false;
+    this.updateBulletType();
+    this.oldX = this.x;
+    this.oldY = this.y;
   }
 }
