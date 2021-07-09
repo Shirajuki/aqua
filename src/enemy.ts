@@ -203,7 +203,7 @@ export default class Enemy extends Animal {
       });
       this.cooldown.shootingCur = 0;
       this.cooldown.burstCur += 1 * dt;
-      if (this.cooldown.burstCur >= this.cooldown.burstMax) {
+      if (this.cooldown.burstCur >= this.cooldown.burstMax * dt) {
         this.cooldown.burstCur = 0;
         this.shooting = false;
         const behaviour =

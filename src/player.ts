@@ -1,5 +1,5 @@
 import Animal from './animal';
-import Bullet from './bullet';
+import Bullet, { BulletSinus } from './bullet';
 import { lerp } from './utilities';
 
 class Player extends Animal {
@@ -33,6 +33,7 @@ class Player extends Animal {
     spell: 1,
     power: 1,
   };
+  dead: boolean = false;
   // Other values
   invulnerable: boolean = false;
   invulnerableTimer: number = 0;
@@ -55,7 +56,28 @@ class Player extends Animal {
   }
   shoot(dt: number) {
     if (this.cooldown.shootingCur >= this.cooldown.shootingMax) {
-      if (this.stats.power < 2)
+      if (this.stats.power >= 4) {
+        this.bullets.push(
+          new BulletSinus(this.x, this.y, 16, 16, 'white', [8, 0], [0, 0])
+        );
+        this.bullets.push(
+          new BulletSinus(this.x, this.y, 16, 16, 'white', [8, 30], [0, 0])
+        );
+      } else if (this.stats.power >= 3) {
+        this.bullets.push(
+          new BulletSinus(this.x, this.y, 16, 16, 'white', [8, 0], [0, 0])
+        );
+        this.bullets.push(
+          new BulletSinus(this.x, this.y, 16, 16, 'white', [8, 30], [0, 0])
+        );
+      } else if (this.stats.power >= 2) {
+        this.bullets.push(
+          new Bullet(this.x, this.y - 10, 16, 16, 'white', [8, 0], [0, 0])
+        );
+        this.bullets.push(
+          new Bullet(this.x, this.y + 10, 16, 16, 'white', [8, 0], [0, 0])
+        );
+      } else if (this.stats.power >= 1)
         this.bullets.push(
           new Bullet(this.x, this.y, 16, 16, 'blue', [8, 0], [0, 0])
         );
