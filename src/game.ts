@@ -35,14 +35,14 @@ class Game {
       'rgba(0,0,0,0.2)',
       this.bullets,
       this.player,
-      bp.spread5LockOn,
-      testLogic(),
+      bp.homingSimple,
+      undefined,
       100
     );
-    this.enemies = [];
+    this.enemies = [boss];
 
     this.enemyWavePattern = [pattern.testSpawn()];
-    setTimeout(() => this.addEnemy(), 2000);
+    // setTimeout(() => this.addEnemy(), 2000);
   }
   draw(ctx: any) {
     // Enemy bullets

@@ -4,10 +4,19 @@ import { lerp } from './utilities';
 export default class Boss extends Enemy {
   maxHp: number = this.hp;
   hpPercent: number = 380;
-  logic(ctx: any) {
-    super.logic(ctx);
-    this.drawBossHp(ctx);
+  logic(ctx: any, dt: number) {
+    super.logic(ctx, dt);
+    if (!this.showWarning) this.drawBossHp(ctx);
   }
+  showWarning: boolean = true;
+  warning = {
+    cur: 0,
+    max: 5,
+    y: 10,
+    scrollX: 0,
+    amount: 0,
+    amountMax: 10,
+  };
   drawBossHp(ctx: any) {
     ctx.beginPath();
     ctx.fillStyle = this.color;

@@ -2,11 +2,18 @@
 	import { onMount } from 'svelte';
 	import Game from './game';
 	import { shockwave } from './particle';
+	import Rocks from './Rocks.svelte';
+	// import Warning from './Warning.svelte';
 
 	let canvas: any;
 	let bg: any;
 	let sky0: any;
 	let sky1: any;
+	const rocks: any = [
+		{ x: 100, y: -150, width: 180 },
+		{ x: 200, y: -75, width: 140 },
+		{ x: 300, y: 0, width: 100 }
+	];
 	const game = new Game();
 	const player = game.player;
 	const scroll: {x: number, y: number} = { x: 0, y: 0 };
@@ -90,6 +97,9 @@
 		<img bind:this={sky0} class="sky" src="/images/sky.png" alt="sky0">
 		<img bind:this={sky1} class="sky" src="/images/sky.png" alt="sky1">
 		<img bind:this={bg} class="bg" src="/images/bg.png" alt="background">
+		{#each rocks as rock}
+			<Rocks scroll={scroll} playerY={player.y} {...rock}/>
+		{/each}
 	</div>
 	<div class="gui">
 		<div>

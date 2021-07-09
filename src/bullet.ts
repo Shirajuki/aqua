@@ -57,6 +57,25 @@ export class BulletSpiralInward extends Bullet {
   }
 }
 
+export class BulletSinus extends Bullet {
+  startY: number = this.y;
+  move(dt: number) {
+    this.x += this.velocity[0] * dt;
+    this.velocity[1] += 1 * dt;
+    this.y = 25 * Math.sin(this.velocity[1] / 10) + this.startY;
+    this.velocity[0] += this.acceleration[0] * dt;
+    this.velocity[1] += this.acceleration[1] * dt;
+    if (
+      !this.outOfRange &&
+      (this.x < 0 || this.x > 1200 || this.y < 0 || this.y > 900)
+    )
+      this.outOfRange = true;
+  }
+  draw(ctx: any) {
+    super.draw(ctx);
+  }
+}
+
 export class BulletAngle extends Bullet {
   speed: number = 10;
   vx: number = 0.02;
@@ -79,6 +98,7 @@ export class BulletHoming extends Bullet {
   homingTimerMax: number = 120;
   homingIntervalCur: number = 0;
   homingIntervalMax: number = 10;
+  oldAngle: number = 0;
   constructor(
     x: number,
     y: number,
@@ -92,6 +112,17 @@ export class BulletHoming extends Bullet {
     super(x, y, width, height, color, velocity, acceleration);
     this.player = player;
   }
+  move(dt: number) {
+    this.x += this.velocity[0] * dt;
+    this.y += this.velocity[1] * dt;
+    this.velocity[0] += this.acceleration[0] * dt;
+    this.velocity[1] += this.acceleration[1] * dt;
+    if (
+      !this.outOfRange &&
+      (this.x < 0 || this.x > 1200 || this.y < 0 || this.y > 900)
+    )
+      this.outOfRange = true;
+  }
   draw(ctx: any) {
     super.draw(ctx);
     // Determine angle using atan
@@ -101,6 +132,13 @@ export class BulletHoming extends Bullet {
           this.y - this.player.y - this.height,
           this.x - this.player.x
         );
+        if (Math.abs(angle - this.oldAngle) > 3 || this.player.dead) {
+          this.homingTimerCur = this.homingTimerMax;
+          this.velocity[0] = Math.cos(angle) * this.speed;
+          this.velocity[1] = Math.sin(angle) * this.speed;
+          return;
+        }
+        this.oldAngle = angle;
         this.velocity[0] = Math.cos(angle) * this.speed;
         this.velocity[1] = Math.sin(angle) * this.speed;
         this.homingIntervalCur = 0;
