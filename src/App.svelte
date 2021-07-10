@@ -3,7 +3,6 @@
 	import Game from './game';
 	import { shockwave } from './particle';
 	import Rocks from './Rocks.svelte';
-	import Rock from './rock';
 	// import Warning from './Warning.svelte';
 
 	let canvas: any;
