@@ -3,7 +3,7 @@
 	import Game from './game';
 	import { shockwave } from './particle';
 	import Rocks from './Rocks.svelte';
-	// import Warning from './Warning.svelte';
+	import Warning from './Warning.svelte';
 
 	let canvas: any;
 	let bg: any;
@@ -141,6 +141,9 @@
 		</div>
 	</div>
 	<canvas bind:this={canvas} width={924} height={520} />
+	{#if game.showWarning}
+		<Warning />
+	{/if}
 </div>
 
 <style>
@@ -151,6 +154,7 @@
 		transform: translate(-50%, -50%);
 		width: 924px;
 		height: 520px;
+		overflow: hidden;
 	}
 	canvas {
 		background-color: transparent;
@@ -158,7 +162,6 @@
 		left: 50%;
 		top: 50%;
 		transform: translate(-50%, -50%);
-		border: 1px solid black;
 	}
 	div.viewport {
 		position: absolute;

@@ -1,6 +1,26 @@
 import * as behaviour from './behaviourLogics';
+import * as bp from './bulletPatterns';
 
 export const testSpawn = (): ISpawnPattern => curveDownSpawn();
+export const bossSpawn = (): ISpawnPattern => {
+  return {
+    enemies: [
+      {
+        x: 600,
+        y: 200,
+        width: 400,
+        height: 227,
+        color: 'rgba(0,0,0,0.2)',
+        behaviour: undefined,
+        bulletType: bp.homingSimple,
+        hp: 100,
+      },
+    ],
+    spawner: [{ enemyIndex: 0, timeToSpawn: 0, pos: {} }],
+    waveDuration: 2000,
+    boss: true,
+  };
+};
 export const linearSpawn = (): ISpawnPattern => {
   return {
     enemies: [

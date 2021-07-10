@@ -6,9 +6,8 @@ export default class Boss extends Enemy {
   hpPercent: number = 380;
   logic(ctx: any, dt: number) {
     super.logic(ctx, dt);
-    if (!this.showWarning) this.drawBossHp(ctx);
+    this.drawBossHp(ctx);
   }
-  showWarning: boolean = true;
   warning = {
     cur: 0,
     max: 5,

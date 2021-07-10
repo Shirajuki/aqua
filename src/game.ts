@@ -19,6 +19,7 @@ class Game {
   spawnCount: number = 0;
   enemyWavePattern: any[];
   score: number = 0;
+  showWarning: boolean = false;
   // Framerate independence using timestamps
   dt: number = 1; // initial value to 1
   constructor() {
@@ -39,9 +40,9 @@ class Game {
       undefined,
       100
     );
-    this.enemies = [boss];
+    this.enemies = [];
 
-    this.enemyWavePattern = [pattern.testSpawn()];
+    this.enemyWavePattern = [pattern.testSpawn(), pattern.bossSpawn()];
     // setTimeout(() => this.addEnemy(), 2000);
   }
   draw(ctx: any) {
@@ -77,6 +78,7 @@ class Game {
     for (let i = this.enemies.length - 1; i >= 0; i--) {
       const enemy = this.enemies[i];
       enemy.logic(ctx, this.dt);
+      // Collision and dead check
       if (enemy.dead) {
         this.score += 10000;
         explosion({
@@ -118,56 +120,60 @@ class Game {
   addEnemy() {
     let timer = 0;
     const wave = this.enemyWavePattern[this.wave];
-    for (let i = 0; i < wave.spawner.length; i++) {
-      const pos = wave.spawner[i].pos;
-      const enemyIndex = wave.spawner[i].enemyIndex;
-      const timeToSpawn = wave.spawner[i].timeToSpawn;
-      const ei = wave.enemies[enemyIndex];
-      const newEnemy = new Enemy(
-        pos.x || ei.x,
-        pos.y || ei.y,
-        ei.width,
-        ei.height,
-        ei.color,
-        this.bullets,
-        this.player,
-        ei.bulletType,
-        ei.behaviour(),
-        ei.hp,
-        ei.reverse || false
-      );
-      setTimeout(() => {
-        this.enemies.push(newEnemy);
-        console.log('spawn');
-      }, timer);
-      timer += timeToSpawn;
+    const boss = wave?.boss ?? false;
+    if (boss) {
+      this.addBoss(wave);
+    } else {
+      for (let i = 0; i < wave.spawner.length; i++) {
+        const pos = wave.spawner[i].pos;
+        const enemyIndex = wave.spawner[i].enemyIndex;
+        const timeToSpawn = wave.spawner[i].timeToSpawn;
+        const ei = wave.enemies[enemyIndex];
+        const newEnemy = new Enemy(
+          pos.x || ei.x,
+          pos.y || ei.y,
+          ei.width,
+          ei.height,
+          ei.color,
+          this.bullets,
+          this.player,
+          ei.bulletType,
+          ei.behaviour ? ei.behaviour() : undefined,
+          ei.hp,
+          ei.reverse || false
+        );
+        setTimeout(() => {
+          this.enemies.push(newEnemy);
+        }, timer);
+        timer += timeToSpawn;
+      }
     }
+    this.wave++;
   }
   // Add boss
-  addBoss() {
-    let timer = 0;
-    const wave = this.enemyWavePattern[this.wave];
-    for (let i = 0; i < wave.spawner.length; i++) {
-      const enemyIndex = wave.spawner[i].enemyIndex;
-      const timeToSpawn = wave.spawner[i].timeToSpawn;
-      const ei = wave.enemies[enemyIndex];
-      const newEnemy = new Boss(
-        ei.x,
-        ei.y,
-        ei.width,
-        ei.height,
-        ei.color,
-        this.bullets,
-        this.player,
-        ei.bulletType,
-        ei.behaviourLogics(),
-        ei.hp
-      );
-      setTimeout(() => {
+  addBoss(wave: any) {
+    this.showWarning = true;
+    setTimeout(() => {
+      this.showWarning = false;
+      for (let i = 0; i < wave.spawner.length; i++) {
+        const pos = wave.spawner[i].pos;
+        const enemyIndex = wave.spawner[i].enemyIndex;
+        const ei = wave.enemies[enemyIndex];
+        const newEnemy = new Boss(
+          pos.x || ei.x,
+          pos.y || ei.y,
+          ei.width,
+          ei.height,
+          ei.color,
+          this.bullets,
+          this.player,
+          ei.bulletType,
+          ei.behaviour ? ei.behaviour() : undefined,
+          ei.hp
+        );
         this.enemies.push(newEnemy);
-      }, timer);
-      timer += timeToSpawn;
-    }
+      }
+    }, 6100);
   }
 }
 export default Game;
