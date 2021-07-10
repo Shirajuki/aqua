@@ -3,6 +3,7 @@
 	import Game from './game';
 	import { shockwave } from './particle';
 	import Rocks from './Rocks.svelte';
+	import Rock from './rock';
 	// import Warning from './Warning.svelte';
 
 	let canvas: any;
@@ -10,9 +11,12 @@
 	let sky0: any;
 	let sky1: any;
 	const rocks: any = [
-		{ x: 100, y: -150, width: 180 },
-		{ x: 200, y: -75, width: 140 },
-		{ x: 300, y: 0, width: 100 }
+		{ x: 100, y: -150, width: 100, speed: 0.1 },
+		{ x: 920, y: -150, width: 100, speed: 0.1 },
+		{ x: 200, y: -125, width: 140, speed: 0.2 },
+		{ x: 930, y: -125, width: 140, speed: 0.2 },
+		{ x: 300, y: -100, width: 160, speed: 0.3 },
+		{ x: 900, y: -100, width: 160, speed: 0.3 },
 	];
 	const game = new Game();
 	const player = game.player;
@@ -54,6 +58,13 @@
 				else if (scroll.y > 0) scroll.y = 0;
 				bg.style.transform = `translate(${scroll.x}px, ${scroll.y}px)`
 
+				// Rocks
+				for (let i=rocks.length - 1; i>=0; i--) {
+					const rock = rocks[i];
+					rock.x -= rock.speed;
+					if (rock.x < rock.width+5) rock.x = Math.random()*rock.width + 925
+				}
+
 				// Scrolling parallax sky
 				sky0.style.transform = `translate(${scroll.x - skyScroll[0]}px, ${scroll.y}px)`
 				sky1.style.transform = `translate(${scroll.x - skyScroll[1]}px, ${scroll.y}px)`
@@ -90,6 +101,9 @@
 		else if (event.key === 'c') shockwave({x: 450, y: 300, size: 30, amount: 30, particleArr: game.particles});
 		event.preventDefault();
 	};
+	const getRockData = (rock: any, scroll: any) => {
+		return {...rock, scroll: scroll, playerY: player.y};
+	}
 </script>
 
 <div class="game">
@@ -98,7 +112,7 @@
 		<img bind:this={sky1} class="sky" src="/images/sky.png" alt="sky1">
 		<img bind:this={bg} class="bg" src="/images/bg.png" alt="background">
 		{#each rocks as rock}
-			<Rocks scroll={scroll} playerY={player.y} {...rock}/>
+			<Rocks {...getRockData(rock, scroll)}/>
 		{/each}
 	</div>
 	<div class="gui">

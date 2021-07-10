@@ -50,7 +50,7 @@ class Player extends Animal {
   move(dt: number) {
     const v = this.velocity[this.focusing ? 1 : 0] * dt;
     if (this.movement.left && this.x - v - this.width * 2 > 0) this.x -= v;
-    if (this.movement.up && this.y - v - this.height * 2 > 50) this.y -= v;
+    if (this.movement.up && this.y - v - this.height * 2 > 80) this.y -= v;
     if (this.movement.right && this.x + v < 924 - this.width * 2) this.x += v;
     if (this.movement.down && this.y + v < 520 - this.height * 2) this.y += v;
   }
