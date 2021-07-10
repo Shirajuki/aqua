@@ -61,7 +61,7 @@
 				for (let i=rocks.length - 1; i>=0; i--) {
 					const rock = rocks[i];
 					rock.x -= rock.speed;
-					if (rock.x < rock.width+5) rock.x = Math.random()*rock.width + 925
+					if (rock.x < -250) rock.x = Math.random()*rock.width + 1100
 				}
 
 				// Scrolling parallax sky
