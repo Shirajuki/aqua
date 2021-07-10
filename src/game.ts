@@ -4,7 +4,9 @@ import Boss from './boss';
 import type Bullet from './bullet';
 import * as bp from './bulletPatterns';
 import type Particle from './particle';
+import type Item from './item';
 import { explosion, ripple } from './particle';
+import { point } from './item';
 import { testLogic } from './behaviourLogics';
 import * as pattern from './spawnPatterns';
 
@@ -14,6 +16,7 @@ class Game {
   bullets: Bullet[];
   enemies: Enemy[];
   particles: Particle[];
+  items: Item[];
   wave: number = 0;
   spawnTimer: number = 0;
   spawnCount: number = 0;
@@ -27,6 +30,7 @@ class Game {
     this.player = new Player(100, 100, 8, 8, 'aqua');
     this.bullets = [];
     this.particles = [];
+    this.items = [];
 
     let boss = new Boss(
       600,
@@ -43,7 +47,7 @@ class Game {
     this.enemies = [];
 
     this.enemyWavePattern = [pattern.testSpawn(), pattern.bossSpawn()];
-    // setTimeout(() => this.addEnemy(), 2000);
+    setTimeout(() => this.addEnemy(), 2000);
   }
   draw(ctx: any) {
     // Enemy bullets
@@ -74,6 +78,25 @@ class Game {
       if (particle.outOfRange || particle.lifeTime <= 0)
         this.particles.splice(i, 1);
     }
+    // Items
+    for (let i = this.items.length - 1; i >= 0; i--) {
+      const item = this.items[i];
+      item.move();
+      item.draw(ctx);
+      if (item.outOfRange) this.items.splice(i, 1);
+      if (this.player.collisionSprite(item)) {
+        this.items.splice(i, 1);
+        if (item.type === 0) {
+          console.log('get item: point');
+          this.score += 300;
+          // Show text display
+        } else if (item.type === 1) {
+          console.log('get item: powerup');
+        } else if (item.type === 2) {
+          console.log('get item: life');
+        }
+      }
+    }
     // Enemies
     for (let i = this.enemies.length - 1; i >= 0; i--) {
       const enemy = this.enemies[i];
@@ -89,6 +112,13 @@ class Game {
           particleArr: this.particles,
           speed: Math.min(enemy.width / 40, 7),
         });
+        point({
+          x: enemy.x + enemy.width / 2,
+          y: enemy.y + enemy.height / 2,
+          size: 40,
+          amount: 2,
+          particleArr: this.items,
+        });
         this.enemies.splice(i, 1);
         continue;
       }
@@ -103,7 +133,7 @@ class Game {
         const bullet = this.player.bullets[j];
         if (enemy.collision(bullet)) {
           this.player.bullets.splice(j, 1);
-          enemy.hit();
+          enemy.hit(bullet.damage);
         }
       }
     }

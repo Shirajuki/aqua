@@ -62,7 +62,7 @@ interface ISpawnPattern {
     height: number;
     color: string;
     behaviour: () => IBehaviourLogic;
-    bulletType: IBulletType;
+    bulletType?: IBulletType;
     hp: number;
     reverse?: boolean;
   }[];

@@ -173,8 +173,8 @@ export default class Enemy extends Animal {
     )
       this.outOfRange = true;
   }
-  hit() {
-    this.hp--;
+  hit(dmg: number) {
+    this.hp -= dmg || 1;
     if (this.hp <= 0) {
       this.dead = true;
     }

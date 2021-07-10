@@ -31,7 +31,7 @@ export default class Boss extends Enemy {
     if (this.sprite.complete)
       ctx.drawImage(this.sprite, 0, 0, 430, 245, 500, 455, 103, 58);
   }
-  hit() {
-    super.hit();
+  hit(dmg: any) {
+    super.hit(dmg);
   }
 }

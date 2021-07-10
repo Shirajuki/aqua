@@ -5,6 +5,7 @@ export default class Bullet extends Animal {
   outOfRange = false;
   velocity: number[];
   acceleration: number[];
+  damage: number = 1;
   constructor(
     x: number,
     y: number,
@@ -12,11 +13,13 @@ export default class Bullet extends Animal {
     height: number,
     color: string,
     velocity: number[],
-    acceleration: number[]
+    acceleration: number[],
+    damage: number = 1
   ) {
     super(x, y, width, height, color);
     this.velocity = velocity;
     this.acceleration = acceleration;
+    this.damage = damage;
   }
   move(dt: number) {
     this.x += this.velocity[0] * dt;

@@ -47,6 +47,14 @@ class Player extends Animal {
     super(x, y, width, height, color);
     this.sprite.src = '/images/aqua_sprite2.png';
   }
+  collisionSprite(other: Animal) {
+    return !(
+      this.y - 80 + 133 < other.y ||
+      this.y - 80 > other.y + other.height ||
+      this.x - 60 + 100 < other.x ||
+      this.x > other.x + other.width
+    );
+  }
   move(dt: number) {
     const v = this.velocity[this.focusing ? 1 : 0] * dt;
     if (this.movement.left && this.x - v - this.width * 2 > 0) this.x -= v;
@@ -58,17 +66,17 @@ class Player extends Animal {
     if (this.cooldown.shootingCur >= this.cooldown.shootingMax) {
       if (this.stats.power >= 4) {
         this.bullets.push(
-          new BulletSinus(this.x, this.y, 16, 16, 'white', [8, 0], [0, 0])
+          new BulletSinus(this.x, this.y, 16, 16, 'white', [8, 0], [0, 0], 2)
         );
         this.bullets.push(
-          new BulletSinus(this.x, this.y, 16, 16, 'white', [8, 30], [0, 0])
+          new BulletSinus(this.x, this.y, 16, 16, 'white', [8, 30], [0, 0], 2)
         );
       } else if (this.stats.power >= 3) {
         this.bullets.push(
-          new BulletSinus(this.x, this.y, 16, 16, 'white', [8, 0], [0, 0])
+          new BulletSinus(this.x, this.y, 16, 16, 'white', [8, 0], [0, 0], 2)
         );
         this.bullets.push(
-          new BulletSinus(this.x, this.y, 16, 16, 'white', [8, 30], [0, 0])
+          new BulletSinus(this.x, this.y, 16, 16, 'white', [8, 30], [0, 0], 2)
         );
       } else if (this.stats.power >= 2) {
         this.bullets.push(
@@ -102,6 +110,7 @@ class Player extends Animal {
       this.lean = lerp(this.lean, this.lean - this.leanSpeed, 0.5);
     else if (this.lean < 0)
       this.lean = lerp(this.lean, this.lean + this.leanSpeed, 0.5);
+
     ctx.save();
     // Translate the origin to the center of the image
     ctx.translate(this.x - 60 + 100 / 2, this.y - 80 + 133 / 2);
