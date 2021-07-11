@@ -3,7 +3,7 @@ import Bullet, {
   BulletSpiralInward,
   BulletAngle,
   BulletHoming,
-} from './bullet';
+} from '../bullet';
 
 export const linear: IBulletType = {
   cooldown: {

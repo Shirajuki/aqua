@@ -2,13 +2,13 @@ import Player from './player';
 import Enemy from './enemy';
 import Boss from './boss';
 import type Bullet from './bullet';
-import * as bp from './bulletPatterns';
+import * as bp from './lib/bulletPatterns';
 import type Particle from './particle';
 import type Item from './item';
 import { explosion, ripple } from './particle';
 import { point } from './item';
-import { testLogic } from './behaviourLogics';
-import * as pattern from './spawnPatterns';
+import { testLogic } from './lib/behaviourLogics';
+import * as pattern from './lib/spawnPatterns';
 
 class Game {
   state: number;

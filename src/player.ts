@@ -1,6 +1,6 @@
 import Animal from './animal';
 import Bullet, { BulletSinus } from './bullet';
-import { lerp } from './utilities';
+import { lerp } from './utils';
 
 class Player extends Animal {
   // Movement values

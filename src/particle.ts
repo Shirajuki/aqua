@@ -1,5 +1,5 @@
 import Bullet from './bullet';
-import { lerp } from './utilities';
+import { lerp } from './utils';
 
 const getRGBColor = (color: string) => {
   if (color[0] === '#') {

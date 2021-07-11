@@ -1,5 +1,5 @@
 import Enemy from './enemy';
-import { lerp } from './utilities';
+import { lerp } from './utils';
 
 export default class Boss extends Enemy {
   maxHp: number = this.hp;
