@@ -74,7 +74,6 @@ export class HomingItem extends Item {
     const angle = Math.atan2(this.y - this.player.y, this.x - this.player.x);
     this.velocity[0] = Math.cos(angle) * this.acceleration[0];
     this.velocity[1] = Math.sin(angle) * this.acceleration[0];
-    // this.velocity[0] *= this.friction;
     this.x += this.velocity[0];
     this.y += this.velocity[1];
     this.acceleration[0] += this.acceleration[1];

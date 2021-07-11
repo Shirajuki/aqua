@@ -8,6 +8,7 @@ export default class Enemy extends Animal {
   bullets: Bullet[];
   player: Player;
   hp: number = 0;
+  type: number = 0;
   // Bullet shooting values
   dead: boolean = false;
   shooting: boolean = false;

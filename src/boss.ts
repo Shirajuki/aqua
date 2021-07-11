@@ -3,6 +3,7 @@ import { lerp } from './utils';
 import { easeOutQuad } from './lib/easing';
 
 export default class Boss extends Enemy {
+  type = 1;
   maxHp: number = this.hp;
   hpPercent: number = 380;
   initialized: boolean = false;

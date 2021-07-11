@@ -24,6 +24,7 @@ class Game {
   enemyWavePattern: any[];
   score: number = 0;
   showWarning: boolean = false;
+  isBossStage: boolean = false;
   // Framerate independence using timestamps
   dt: number = 1; // initial value to 1
   constructor() {
@@ -116,7 +117,11 @@ class Game {
           particleArr: this.particles,
           speed: Math.min(enemy.width / 40, 7),
         });
-        if (this.enemyWavePattern[this.wave]?.boss) {
+        if (enemy.type === 1) {
+          // Reset boss stage, start spawner interval
+          this.isBossStage = false;
+          setTimeout(() => this.addEnemy(), 0);
+          // Add in particles and item drops
           console.log('add spawn life here');
           shockwave({
             x: enemy.x + enemy.width / 2,
@@ -174,7 +179,15 @@ class Game {
     let timer = 0;
     const wave = this.enemyWavePattern[this.wave];
     const boss = wave?.boss ?? false;
-    if (!wave) return;
+    if (!wave) {
+      // Stage finished, reset wave level and go to next stage
+      this.wave = -1;
+      this.stage++;
+      if (!stages[this.stage]) this.stage--; // Stuck at last stage if none more found
+      this.enemyWavePattern = stages[this.stage];
+      setTimeout(() => this.addEnemy(), 5000); // Next wave at atleast 5 seconds delay after boss battle
+      return;
+    }
     if (boss) {
       this.addBoss(wave);
     } else {
@@ -208,6 +221,7 @@ class Game {
   // Add boss
   addBoss(wave: any) {
     this.showWarning = true;
+    this.isBossStage = true;
     setTimeout(() => {
       this.showWarning = false;
       const pos = wave.spawner[0].pos;
