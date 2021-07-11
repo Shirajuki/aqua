@@ -13,7 +13,7 @@
   </a>
 </p>
 
-A Work In Progress Touhou, Azur Lane and Harmful Park inspired danmaku JS horizontal scrolling 2D shooting game ⚓
+A Work In Progress Touhou, Azur Lane, Gundemonium Recollection and Harmful Park inspired danmaku JS horizontal scrolling 2D shooting game ⚓
 
 ## Built With
 - JavaScript / TypeScript
