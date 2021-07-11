@@ -69,6 +69,9 @@ class Player extends Animal {
           new BulletSinus(this.x, this.y, 16, 16, 'white', [8, 0], [0, 0], 2)
         );
         this.bullets.push(
+          new BulletSinus(this.x, this.y, 16, 16, 'white', [8, 15], [0, 0], 2)
+        );
+        this.bullets.push(
           new BulletSinus(this.x, this.y, 16, 16, 'white', [8, 30], [0, 0], 2)
         );
       } else if (this.stats.power >= 3) {

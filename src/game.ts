@@ -6,7 +6,7 @@ import * as bp from './lib/bulletPatterns';
 import type Particle from './particle';
 import type Item from './item';
 import { explosion, ripple, shockwave } from './particle';
-import { point, smallPoint } from './item';
+import { point, smallPoint, powerup } from './item';
 import { testLogic } from './lib/behaviourLogics';
 import stages from './stages';
 
@@ -90,13 +90,14 @@ class Game {
         this.items.splice(i, 1);
         if (item.type === 0) {
           console.log('get item: point');
-          this.score += 300;
+          this.score += 150;
           // Show text display
         } else if (item.type === 1) {
           console.log('get item: smallpoint');
           this.score += 50;
         } else if (item.type === 2) {
           console.log('get item: powerup');
+          this.player.stats.power += 0.125;
         } else if (item.type === 3) {
           console.log('get item: life');
         }
@@ -108,7 +109,7 @@ class Game {
       enemy.logic(ctx, this.dt);
       // Collision and dead check
       if (enemy.dead) {
-        this.score += 10000;
+        this.score += 100;
         explosion({
           x: enemy.x + enemy.width / 2,
           y: enemy.y + enemy.height / 2,
@@ -118,6 +119,7 @@ class Game {
           speed: Math.min(enemy.width / 40, 7),
         });
         if (enemy.type === 1) {
+          this.score += 2900; // Boss gives 3000 points
           // Reset boss stage, start spawner interval
           this.isBossStage = false;
           setTimeout(() => this.addEnemy(), 0);
@@ -139,13 +141,24 @@ class Game {
             player: this.player,
           });
         }
-        point({
-          x: enemy.x + enemy.width / 2,
-          y: enemy.y + enemy.height / 2,
-          size: 40,
-          amount: 2,
-          itemArr: this.items,
-        });
+        // 1/8 chance of powerup drop
+        if (Math.floor(Math.random() * 8) === 0) {
+          powerup({
+            x: enemy.x + enemy.width / 2,
+            y: enemy.y + enemy.height / 2,
+            size: 40,
+            amount: 1,
+            itemArr: this.items,
+          });
+        } else {
+          point({
+            x: enemy.x + enemy.width / 2,
+            y: enemy.y + enemy.height / 2,
+            size: 40,
+            amount: 2,
+            itemArr: this.items,
+          });
+        }
         this.enemies.splice(i, 1);
         continue;
       }

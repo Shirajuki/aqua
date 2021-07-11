@@ -8,6 +8,9 @@ export default class Enemy extends Animal {
   bullets: Bullet[];
   player: Player;
   hp: number = 0;
+  // Type:
+  // 0 : enemy
+  // 1 : boss
   type: number = 0;
   // Bullet shooting values
   dead: boolean = false;
@@ -76,10 +79,12 @@ export default class Enemy extends Animal {
     this.reverse = reverse;
   }
   updateBulletType() {
+    // Prioritize bulletType over behaviourLogic
     const { cooldown, pattern } =
+      this.bulletType ||
       this.behaviourLogic?.bulletTypes[
         this.behaviourLogic?.behaviour[this.behaviourLogic?.state]?.bulletType
-      ] || this.bulletType;
+      ];
     this.cooldown = cooldown;
     this.pattern = pattern;
     this.target = [this.player.x, this.player.y];

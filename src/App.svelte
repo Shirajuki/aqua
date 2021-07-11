@@ -44,7 +44,7 @@
 				ctx.fillStyle = "#fff";
 				ctx.fillText('FPS: ' + fps, canvas.width - 100, canvas.height - 10);
 				// Add score
-				game.score++;
+				game.score += 0.2*(game.dt || 1);
 				// Draw the game
 				game.draw(ctx);
 				
@@ -100,8 +100,6 @@
 		else if (event.key === 'Shift') player.focusing = false;
 		// Particle and item tests
 		else if (event.key === 'c') shockwave({x: 450, y: 300, size: 30, amount: 30, particleArr: game.particles});
-		else if (event.key === 'v') point({x: 450, y: 300, size: 30, amount: 2, itemArr: game.items});
-		else if (event.key === 'b') smallPoint({x: 450, y: 300, size: 20, amount: 2, itemArr: game.items, player: player});
 		event.preventDefault();
 	};
 	const getRockData = (rock: any, scroll: any) => {
@@ -122,7 +120,7 @@
 		<div>
 			<div class="score">
 				<p>score</p>
-				<p class="scorec">{String(game.score).padStart(9, '0')}</p>
+				<p class="scorec">{String(Math.floor(game.score)).padStart(9, '0')}</p>
 			</div>
 			<div class="life">
 				<span class="heart {game.player.stats.life <= 0 ? "hidden" : ""}"></span>

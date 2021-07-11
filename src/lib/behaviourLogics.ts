@@ -95,18 +95,18 @@ export const reverseLinearLogic: () => IBehaviourLogic = () => {
     bulletTypes: [bp.linearLockOn],
     behaviour: [
       {
-        duration: 3,
-        path: { x: 300 },
+        duration: 5,
+        path: { x: 500 },
         bulletType: 0,
-        shootAfter: 1,
+        shootAfter: 4,
         shootAfterPathing: false,
         easing: { x: easing.easeLinear, y: easing.easeLinear },
       },
       {
-        duration: 3,
-        path: { x: 300 },
+        duration: 5,
+        path: { x: 500 },
         bulletType: 0,
-        shootAfter: 1,
+        shootAfter: 6,
         shootAfterPathing: false,
         easing: { x: easing.easeLinear, y: easing.easeLinear },
       },
@@ -158,6 +158,99 @@ export const waveLogic: () => IBehaviourLogic = () => {
         shootAfter: 4,
         shootAfterPathing: false,
         easing: { x: easing.easeLinear, y: easing.easeInOutSine },
+      },
+    ],
+  };
+};
+export const curveDownLogic: () => IBehaviourLogic = () => {
+  return {
+    state: 0,
+    stateDurationCur: 0,
+    bulletTypes: [bp.linearLockOn],
+    behaviour: [
+      {
+        duration: 6,
+        path: { x: -1000, y: 600 },
+        bulletType: 0,
+        shootAfter: 1,
+        shootAfterPathing: false,
+        easing: { x: easing.easeLinear, y: easing.easeInOutSine },
+      },
+    ],
+  };
+};
+export const curveUpLogic: () => IBehaviourLogic = () => {
+  return {
+    state: 0,
+    stateDurationCur: 0,
+    bulletTypes: [bp.linearLockOn],
+    behaviour: [
+      {
+        duration: 8,
+        path: { x: -1500, y: -500 },
+        bulletType: 0,
+        shootAfter: 1,
+        shootAfterPathing: false,
+        easing: { x: easing.easeLinear, y: easing.easeInOutSine },
+      },
+    ],
+  };
+};
+
+export const inOutLinearLogic: () => IBehaviourLogic = () => {
+  return {
+    state: 0,
+    stateDurationCur: 0,
+    bulletTypes: [bp.linearLockOn],
+    behaviour: [
+      {
+        duration: 1.4,
+        path: { x: -250 },
+        bulletType: 0,
+        shootAfter: 0.5,
+        shootAfterPathing: true,
+        easing: { x: easing.easeOutQuad, y: easing.easeOutQuad },
+      },
+      {
+        duration: 2,
+        path: { x: 250 },
+        bulletType: 0,
+        shootAfter: 4,
+        shootAfterPathing: false,
+        easing: { x: easing.easeOutQuad, y: easing.easeOutQuad },
+      },
+      {
+        duration: 1,
+        path: { x: 900 },
+        bulletType: 0,
+        shootAfter: 4,
+        shootAfterPathing: false,
+        easing: { x: easing.easeOutQuad, y: easing.easeOutQuad },
+      },
+    ],
+  };
+};
+export const fastLinearLogic: () => IBehaviourLogic = () => {
+  return {
+    state: 0,
+    stateDurationCur: 0,
+    bulletTypes: [bp.linearLockOn],
+    behaviour: [
+      {
+        duration: 1,
+        path: { x: -600 },
+        bulletType: 0,
+        shootAfter: 2,
+        shootAfterPathing: false,
+        easing: { x: easing.easeLinear, y: easing.easeLinear },
+      },
+      {
+        duration: 1,
+        path: { x: -600 },
+        bulletType: 0,
+        shootAfter: 2,
+        shootAfterPathing: false,
+        easing: { x: easing.easeLinear, y: easing.easeLinear },
       },
     ],
   };

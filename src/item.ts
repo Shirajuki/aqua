@@ -3,12 +3,12 @@ import type Player from './player';
 
 export default class Item extends Particle {
   color: string = 'lime';
-  type: number = 0;
   // Type:
   // 0 : point
   // 1 : smallpoint
   // 2 : powerup
   // 3 : life
+  type: number = 0;
   constructor(
     x: number,
     y: number,
@@ -22,6 +22,7 @@ export default class Item extends Particle {
   ) {
     super(x, y, width, height, color, velocity, acceleration, lifeTime);
     this.type = type;
+    if (this.type === 2) this.color = 'teal';
   }
   move() {
     this.velocity[0] *= this.friction;
