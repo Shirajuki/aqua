@@ -29,6 +29,7 @@ A Work In Progress Touhou, Azur Lane, Gundemonium Recollection and Harmful Park 
 - [ ] Draw and add more sprites
 - [ ] Add a title screen/main menu
 - [ ] Add sfx and bgm music
+- [ ] Fix images and all extra assets to be web friendly
 
 <hr />
 

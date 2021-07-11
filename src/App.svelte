@@ -2,7 +2,6 @@
 	import { onMount } from 'svelte';
 	import Game from './game';
 	import { shockwave } from './particle';
-	import { point, smallPoint } from './item';
 	import Rocks from './components/Rocks.svelte';
 	import Warning from './components/Warning.svelte';
 
