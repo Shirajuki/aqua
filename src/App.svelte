@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import Game from './game';
 	import { shockwave } from './particle';
-	import { point } from './item';
+	import { point, smallPoint } from './item';
 	import Rocks from './Rocks.svelte';
 	import Warning from './Warning.svelte';
 
@@ -99,7 +99,8 @@
 		else if (event.key === 'x') player.spelling = false;
 		else if (event.key === 'Shift') player.focusing = false;
 		else if (event.key === 'c') shockwave({x: 450, y: 300, size: 30, amount: 30, particleArr: game.particles});
-		else if (event.key === 'v') point({x: 450, y: 300, size: 30, particleArr: game.items});
+		else if (event.key === 'v') point({x: 450, y: 300, size: 30, amount: 2, itemArr: game.items});
+		else if (event.key === 'b') smallPoint({x: 450, y: 300, size: 20, amount: 2, itemArr: game.items, player: player});
 		event.preventDefault();
 	};
 	const getRockData = (rock: any, scroll: any) => {

@@ -53,6 +53,16 @@ interface IParticlePattern {
   particleArr: Particle[];
   speed?: number;
 }
+// Item interface
+interface IItemPattern {
+  x: number;
+  y: number;
+  size: number;
+  amount: number;
+  itemArr: Particle[];
+  speed?: number;
+  player?: Player;
+}
 // Spawn interface
 interface ISpawnPattern {
   enemies: {

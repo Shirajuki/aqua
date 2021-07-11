@@ -91,8 +91,11 @@ class Game {
           this.score += 300;
           // Show text display
         } else if (item.type === 1) {
-          console.log('get item: powerup');
+          console.log('get item: smallpoint');
+          this.score += 50;
         } else if (item.type === 2) {
+          console.log('get item: powerup');
+        } else if (item.type === 3) {
           console.log('get item: life');
         }
       }
@@ -117,7 +120,7 @@ class Game {
           y: enemy.y + enemy.height / 2,
           size: 40,
           amount: 2,
-          particleArr: this.items,
+          itemArr: this.items,
         });
         this.enemies.splice(i, 1);
         continue;
