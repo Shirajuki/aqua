@@ -23,6 +23,13 @@ A Work In Progress Touhou, Azur Lane and Harmful Park inspired danmaku JS horizo
 - LocalStorage API
 - Service Workers (PWA)
 
+## TODO
+- [ ] Fix setTimeout() to work (not throttle) on inactive tabs
+- [ ] Fix stage1 boss fight, possibly multiple phases and more bosses too
+- [ ] Draw and add more sprites
+- [ ] Add a title screen/main menu
+- [ ] Add sfx and bgm music
+
 <hr />
 
 This is a Progressive Web App (PWA) template for [Svelte](https://svelte.dev) apps. It lives at https://github.com/tretapey/svelte-pwa.
