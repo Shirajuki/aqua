@@ -98,6 +98,7 @@
 		else if (event.key === 'z') player.shooting = false;
 		else if (event.key === 'x') player.spelling = false;
 		else if (event.key === 'Shift') player.focusing = false;
+		// Particle and item tests
 		else if (event.key === 'c') shockwave({x: 450, y: 300, size: 30, amount: 30, particleArr: game.particles});
 		else if (event.key === 'v') point({x: 450, y: 300, size: 30, amount: 2, itemArr: game.items});
 		else if (event.key === 'b') smallPoint({x: 450, y: 300, size: 20, amount: 2, itemArr: game.items, player: player});

@@ -15,7 +15,7 @@ export const testLogic: () => IBehaviourLogic = () => {
         duration: 6,
         path: { x: -1000, y: 600 },
         bulletType: 0,
-        shootAfter: 2,
+        shootAfter: 1,
         shootAfterPathing: false,
         easing: { x: easing.easeLinear, y: easing.easeInOutSine },
       },

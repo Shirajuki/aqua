@@ -5,10 +5,10 @@ import type Bullet from './bullet';
 import * as bp from './lib/bulletPatterns';
 import type Particle from './particle';
 import type Item from './item';
-import { explosion, ripple } from './particle';
-import { point } from './item';
+import { explosion, ripple, shockwave } from './particle';
+import { point, smallPoint } from './item';
 import { testLogic } from './lib/behaviourLogics';
-import * as pattern from './lib/spawnPatterns';
+import stages from './stages';
 
 class Game {
   state: number;
@@ -17,7 +17,8 @@ class Game {
   enemies: Enemy[];
   particles: Particle[];
   items: Item[];
-  wave: number = 0;
+  wave: number = -1;
+  stage: number = 0;
   spawnTimer: number = 0;
   spawnCount: number = 0;
   enemyWavePattern: any[];
@@ -46,8 +47,8 @@ class Game {
     );
     this.enemies = [];
 
-    this.enemyWavePattern = [pattern.testSpawn(), pattern.bossSpawn()];
-    setTimeout(() => this.addEnemy(), 2000);
+    this.enemyWavePattern = stages[this.stage];
+    if (this.enemies.length === 0) setTimeout(() => this.addEnemy(), 2000);
   }
   draw(ctx: any) {
     // Enemy bullets
@@ -115,6 +116,24 @@ class Game {
           particleArr: this.particles,
           speed: Math.min(enemy.width / 40, 7),
         });
+        if (this.enemyWavePattern[this.wave]?.boss) {
+          console.log('add spawn life here');
+          shockwave({
+            x: enemy.x + enemy.width / 2,
+            y: enemy.y + enemy.height / 2,
+            size: 30,
+            amount: 30,
+            particleArr: game.particles,
+          });
+          smallPoint({
+            x: enemy.x + enemy.width / 2,
+            y: enemy.y - 100,
+            size: 20,
+            amount: 20,
+            itemArr: this.items,
+            player: this.player,
+          });
+        }
         point({
           x: enemy.x + enemy.width / 2,
           y: enemy.y + enemy.height / 2,
@@ -151,9 +170,11 @@ class Game {
     });
   }
   addEnemy() {
+    this.wave++;
     let timer = 0;
     const wave = this.enemyWavePattern[this.wave];
     const boss = wave?.boss ?? false;
+    if (!wave) return;
     if (boss) {
       this.addBoss(wave);
     } else {
@@ -180,32 +201,31 @@ class Game {
         }, timer);
         timer += timeToSpawn;
       }
+      // Start timer for next wave
+      setTimeout(() => this.addEnemy(), wave.waveDuration);
     }
-    this.wave++;
   }
   // Add boss
   addBoss(wave: any) {
     this.showWarning = true;
     setTimeout(() => {
       this.showWarning = false;
-      for (let i = 0; i < wave.spawner.length; i++) {
-        const pos = wave.spawner[i].pos;
-        const enemyIndex = wave.spawner[i].enemyIndex;
-        const ei = wave.enemies[enemyIndex];
-        const newEnemy = new Boss(
-          pos.x || ei.x,
-          pos.y || ei.y,
-          ei.width,
-          ei.height,
-          ei.color,
-          this.bullets,
-          this.player,
-          ei.bulletType,
-          ei.behaviour ? ei.behaviour() : undefined,
-          ei.hp
-        );
-        this.enemies.push(newEnemy);
-      }
+      const pos = wave.spawner[0].pos;
+      const enemyIndex = wave.spawner[0].enemyIndex;
+      const ei = wave.enemies[enemyIndex];
+      const newEnemy = new Boss(
+        pos.x || ei.x,
+        pos.y || ei.y,
+        ei.width,
+        ei.height,
+        ei.color,
+        this.bullets,
+        this.player,
+        ei.bulletType,
+        ei.behaviour ? ei.behaviour() : undefined,
+        ei.hp
+      );
+      this.enemies.push(newEnemy);
     }, 6100);
   }
 }

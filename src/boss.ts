@@ -1,21 +1,36 @@
 import Enemy from './enemy';
 import { lerp } from './utils';
+import { easeOutQuad } from './lib/easing';
 
 export default class Boss extends Enemy {
   maxHp: number = this.hp;
   hpPercent: number = 380;
-  logic(ctx: any, dt: number) {
-    super.logic(ctx, dt);
-    this.drawBossHp(ctx);
-  }
-  warning = {
+  initialized: boolean = false;
+  initializeTimer = {
     cur: 0,
-    max: 5,
-    y: 10,
-    scrollX: 0,
-    amount: 0,
-    amountMax: 10,
+    max: 20,
+    startX: this.x,
   };
+  logic(ctx: any, dt: number) {
+    // Do logic and draw hp only after boss is initialized
+    if (this.initialized) {
+      super.logic(ctx, dt);
+      this.drawBossHp(ctx);
+    } else if (this.initializeTimer.cur >= this.initializeTimer.max) {
+      this.initializeTimer.cur = 0;
+      this.initialized = true;
+    } else if (!this.initialized) {
+      // Else increment timer while moving boss to screen
+      this.x = easeOutQuad(
+        Math.min(this.initializeTimer.cur, this.initializeTimer.max),
+        this.initializeTimer.startX,
+        -360,
+        this.initializeTimer.max
+      );
+      this.initializeTimer.cur += 0.1 * dt;
+      super.draw(ctx);
+    }
+  }
   drawBossHp(ctx: any) {
     ctx.beginPath();
     ctx.fillStyle = this.color;
@@ -32,6 +47,6 @@ export default class Boss extends Enemy {
       ctx.drawImage(this.sprite, 0, 0, 430, 245, 500, 455, 103, 58);
   }
   hit(dmg: any) {
-    super.hit(dmg);
+    if (this.initialized) super.hit(dmg);
   }
 }

@@ -6,7 +6,7 @@ export const bossSpawn = (): ISpawnPattern => {
   return {
     enemies: [
       {
-        x: 600,
+        x: 950,
         y: 200,
         width: 400,
         height: 227,
@@ -140,6 +140,6 @@ export const curveDownSpawn = (): ISpawnPattern => {
       { enemyIndex: 0, timeToSpawn: 1500, pos: { y: 150 } },
       { enemyIndex: 0, timeToSpawn: 1500, pos: { y: 150 } },
     ],
-    waveDuration: 2000,
+    waveDuration: 13000,
   };
 };
