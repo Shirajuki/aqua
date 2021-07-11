@@ -3,8 +3,8 @@
 	import Game from './game';
 	import { shockwave } from './particle';
 	import { point, smallPoint } from './item';
-	import Rocks from './Rocks.svelte';
-	import Warning from './Warning.svelte';
+	import Rocks from './components/Rocks.svelte';
+	import Warning from './components/Warning.svelte';
 
 	let canvas: any;
 	let bg: any;
