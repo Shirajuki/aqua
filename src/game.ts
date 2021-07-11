@@ -123,7 +123,7 @@ class Game {
             y: enemy.y + enemy.height / 2,
             size: 30,
             amount: 30,
-            particleArr: game.particles,
+            particleArr: this.particles,
           });
           smallPoint({
             x: enemy.x + enemy.width / 2,
