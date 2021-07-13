@@ -27,7 +27,7 @@ A Work In Progress Touhou, Azur Lane, Gundemonium Recollection and Harmful Park 
 - [x] Fix setTimeout() to work (not throttle) on inactive tabs - impossible :c
 - [ ] Fix stage1 boss fight, possibly multiple phases and more bosses too
 - [ ] Draw and add more sprites
-- [ ] Add a title screen/main menu
+- [x] Add a title screen/main menu
 - [ ] Add sfx and bgm music
 - [ ] Fix images and all extra assets to be web friendly
 
