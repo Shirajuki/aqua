@@ -21,12 +21,13 @@
 	const player = game.player;
 	const scroll: {x: number, y: number} = { x: 0, y: 0 };
 	const skyScroll: number[] = [0,-1140];
+	let fps: number;
 	(window as any).game = game;
 	(window as any).scroll = scroll;
 	onMount(() => {
 		const ctx = canvas.getContext('2d');
 		let frame: any; // AnimationFrame cancel on unmount / exit
-		let secondsPassed: number, oldTimeStamp: number, fps: number; // FPS
+		let secondsPassed: number, oldTimeStamp: number;
 		const gameLoop = (timeStamp: number) => {
 			frame = requestAnimationFrame(gameLoop);
 			// Calculate the number of seconds passed since the last frame
@@ -38,10 +39,6 @@
 
 			if (ctx) {
 				ctx.clearRect(0, 0, canvas.width, canvas.height);
-				// Draw number to the screen
-				ctx.font = '25px Arial';
-				ctx.fillStyle = "#fff";
-				ctx.fillText('FPS: ' + fps, canvas.width - 100, canvas.height - 10);
 				// Add score
 				game.score += 0.2*(game.dt || 1);
 				// Draw the game
@@ -145,6 +142,7 @@
 	{#if game.showWarning}
 		<Warning />
 	{/if}
+	<p class="fps">{fps}fps</p>
 </div>
 
 <style>
@@ -231,5 +229,15 @@
 	p.scorec {
 		font-size: 2rem;
 		align-self: flex-end;
+	}
+	p.fps {
+		position: absolute;
+		z-index: 9010;
+		bottom: 5px;
+		right: 10px;
+		color: white;
+		font-weight: 700;
+		font-size: 1.4rem;
+		font-family: setofont, monotype, sans-serif;
 	}
 </style>

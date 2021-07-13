@@ -98,7 +98,7 @@ export const point = ({ x, y, size, amount, itemArr }: IItemPattern) => {
         size,
         '#ffffff',
         [speed, 0],
-        [-6, 0],
+        [-5, 0],
         1,
         0
       )
@@ -147,7 +147,7 @@ export const powerup = ({ x, y, size, amount, itemArr }: IItemPattern) => {
         size,
         '#ffffff',
         [speed, 0],
-        [-6, 0],
+        [-5, 0],
         1,
         2
       )

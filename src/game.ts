@@ -167,7 +167,8 @@ class Game {
         continue;
       }
       // Player collision with enemy, hurts the player too
-      if (enemy.collision(this.player)) this.player.hit();
+      if (enemy.collision(this.player) && !this.player.invulnerable)
+        this.player.hit();
       // Player bullet collision with enemy
       for (let j = this.player.bullets.length - 1; j >= 0; j--) {
         const bullet = this.player.bullets[j];
