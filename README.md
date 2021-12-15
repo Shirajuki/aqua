@@ -24,12 +24,13 @@ A Work In Progress Touhou, Azur Lane, Gundemonium Recollection and Harmful Park 
 - Service Workers (PWA)
 
 ## TODO
-- [x] Fix setTimeout() to work (not throttle) on inactive tabs - impossible :c
+- [ ] Replace all setTimeout() with counter
 - [ ] Fix stage1 boss fight, possibly multiple phases and more bosses too
 - [ ] Draw and add more sprites
-- [x] Add a title screen/main menu
 - [ ] Add sfx and bgm music
 - [ ] Fix images and all extra assets to be web friendly
+- [ ] Fix build script to import libs and files with relative path or starting with `/aqua/`
+- [x] Add a title screen/main menu
 
 <hr />
 
