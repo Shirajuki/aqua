@@ -49,7 +49,7 @@
 		if (!started && buttons) {
 			if (event.key === 'ArrowUp') select(-1);
 			else if (event.key === 'ArrowDown') select(1);
-			else if (event.key === 'Enter') buttons[selected]?.click();
+			else if (event.key === 'Enter' || event.key === 'z') buttons[selected]?.click();
 		}
 		event.preventDefault();
 	};
