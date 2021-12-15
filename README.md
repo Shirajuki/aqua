@@ -15,6 +15,8 @@
 
 A Work In Progress Touhou, Azur Lane, Gundemonium Recollection and Harmful Park inspired danmaku JS horizontal scrolling 2D shooting game ⚓
 
+Play the demo here: https://shirajuki.js.org/aqua/
+
 ## Built With
 - JavaScript / TypeScript
 - Svelte framework
