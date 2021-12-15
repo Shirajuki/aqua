@@ -1,17 +1,21 @@
 {
   "name": "aqua",
   "version": "1.0.0",
+  "homepage": "http://shirajuki.github.io/aqua",
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "start": "sirv public",
-    "format": "prettier --write src"
+    "format": "prettier --write src",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d public"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "19.0.0",
     "@rollup/plugin-node-resolve": "^13.0.0",
     "@rollup/plugin-typescript": "^8.2.1",
     "@tsconfig/svelte": "^2.0.1",
+    "gh-pages": "^3.2.3",
     "prettier": "^2.3.1",
     "prettier-plugin-svelte": "^2.3.0",
     "rollup": "^2.51.0",
