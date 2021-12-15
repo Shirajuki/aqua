@@ -1,7 +1,7 @@
 {
   "name": "aqua",
   "version": "1.0.0",
-  "homepage": "http://shirajuki.github.io/aqua",
+  "homepage": "https://shirajuki.github.io/aqua",
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
