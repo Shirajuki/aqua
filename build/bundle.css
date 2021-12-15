@@ -67,15 +67,15 @@ div.gui.svelte-12ys7p2 > div.svelte-12ys7p2 > div.score.svelte-12ys7p2 {
   flex-direction: column;
 }
 span.heart.svelte-12ys7p2.svelte-12ys7p2.svelte-12ys7p2 {
-  background-image: url(./images/heart.svg);
+  background-image: url(../images/heart.svg);
   height: 20px;
 }
 span.star.svelte-12ys7p2.svelte-12ys7p2.svelte-12ys7p2 {
-  background-image: url(./images/star.svg);
+  background-image: url(../images/star.svg);
   height: 28px;
 }
 span.sword.svelte-12ys7p2.svelte-12ys7p2.svelte-12ys7p2 {
-  background-image: url(./images/sword.svg);
+  background-image: url(../images/sword.svg);
   height: 25px;
 }
 p.scorec.svelte-12ys7p2.svelte-12ys7p2.svelte-12ys7p2 {
@@ -100,7 +100,7 @@ div.menu.svelte-13056xr.svelte-13056xr.svelte-13056xr {
   width: 924px;
   height: 520px;
   display: flex;
-  background-image: url(./images/menu.png);
+  background-image: url(../images/menu.png);
   overflow: hidden;
 }
 div.menu.svelte-13056xr > div.svelte-13056xr.svelte-13056xr {
@@ -230,7 +230,7 @@ div.warningSignWrapper.hidden div.warningSign.bottom {
 div.warningSign.svelte-182f9ha > div.svelte-182f9ha {
   height: 100%;
   width: 100%;
-  background-image: url(./images/warning_sign.png);
+  background-image: url(../images/warning_sign.png);
   background-size: 400px 100%;
   background-position-y: center;
   background-position-x: 100px;
@@ -265,4 +265,3 @@ div.warningSign.bottom.svelte-182f9ha > div.svelte-182f9ha {
 }
 
 /*# sourceMappingURL=bundle.css.map */
-
