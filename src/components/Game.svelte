@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Game from '../game';
+	import {CANVAS_WIDTH, CANVAS_HEIGHT} from "../constants"
 	import { shockwave } from '../particle';
 	import { lifeup } from '../item';
 	import Rocks from './Rocks.svelte';
@@ -140,7 +141,7 @@
 			</div>
 		</div>
 	</div>
-	<canvas bind:this={canvas} width={924} height={520} />
+	<canvas bind:this={canvas} width={CANVAS_WIDTH} height={CANVAS_HEIGHT} />
 	{#if game.showWarning}
 		<Warning />
 	{/if}

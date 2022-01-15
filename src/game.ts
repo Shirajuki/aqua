@@ -9,6 +9,7 @@ import { explosion, ripple, shockwave } from './particle';
 import { point, smallPoint, powerup, lifeup } from './item';
 import { testLogic } from './lib/behaviourLogics';
 import stages from './stages';
+import { CANVAS_WIDTH, CANVAS_HEIGHT } from './constants';
 
 class Game {
   state: number;
@@ -29,7 +30,7 @@ class Game {
   dt: number = 1; // initial value to 1
   constructor() {
     this.state = 0;
-    this.player = new Player(100, 100, 8, 8, 'aqua');
+    this.player = new Player(100, CANVAS_HEIGHT / 2, 8, 8, 'aqua');
     this.bullets = [];
     this.particles = [];
     this.items = [];
