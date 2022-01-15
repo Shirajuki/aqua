@@ -12,7 +12,7 @@ export const bossSpawn = (): ISpawnPattern => {
         height: 227,
         color: 'rgba(0,0,0,0.2)',
         behaviour: undefined,
-        bulletType: bp.homingSimple,
+        bulletType: bp.spiralHowl,
         hp: 100,
       },
     ],

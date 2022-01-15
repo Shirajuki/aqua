@@ -30,6 +30,7 @@
 					console.log("startGame");
 					setTimeout(() => startStore.set(true),1000)
 					selected = 0;
+					buttons.forEach((btn: any) => btn.disabled = true);
 				}
 				else if (btn.id === "endless") {
 					console.log("endless");
@@ -39,11 +40,11 @@
 					console.log("score");
 					selected = 2;
 				}
-				buttons.forEach((btn: any) => btn.disabled = true);
+				//buttons.forEach((btn: any) => btn.disabled = true);
 			})
 		});
 		select(1);
-		btnStart.click(); // Auto start trigger
+		//btnStart.click(); // Auto start trigger
 	});
 
 	document.onkeyup = (event) => {

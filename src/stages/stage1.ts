@@ -1,5 +1,6 @@
 import * as pattern from '../lib/spawnPatterns';
 export default [
+  /*
   pattern.tripleLinearSpawn(),
   pattern.curveUpSpawn(),
   pattern.linearSpawn(),
@@ -12,5 +13,6 @@ export default [
   pattern.linearSpawn(),
   pattern.doubleSlowWave(),
   pattern.curveDownSpawn(),
+	*/
   pattern.bossSpawn(),
 ];

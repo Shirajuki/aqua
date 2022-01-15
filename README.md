@@ -26,7 +26,7 @@ Play the demo here: https://shirajuki.js.org/aqua/
 - Service Workers (PWA)
 
 ## TODO
-- [ ] Replace all setTimeout() with counter
+- [x] Replace all setTimeout() with counter
 - [ ] Fix stage1 boss fight, possibly multiple phases and more bosses too
 - [ ] Draw and add more sprites
 - [ ] Add sfx and bgm music

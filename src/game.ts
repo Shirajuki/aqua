@@ -7,7 +7,7 @@ import type Particle from './particle';
 import type Item from './item';
 import { explosion, glitters, ripple, shockwave } from './particle';
 import { point, smallPoint, powerup, lifeup } from './item';
-import { testLogic } from './lib/behaviourLogics';
+// import { testLogic } from './lib/behaviourLogics';
 import stages from './stages';
 import { CANVAS_HEIGHT } from './constants';
 
@@ -20,8 +20,12 @@ class Game {
   items: Item[];
   wave: number = -1;
   stage: number = 0;
-  spawnTimer: number = 0;
-  spawnCount: number = 0;
+  spawnTimer: number = 400;
+  spawnTimerCur: number = 0;
+  spawnerDivideTimer: number = 12;
+  spawnerCount: number = 0;
+  spawnerPool: Enemy[] = [];
+  spawnerPoolTimer: number[] = [];
   enemyWavePattern: any[];
   score: number = 0;
   showWarning: boolean = false;
@@ -98,17 +102,13 @@ class Game {
           particleArr: this.particles,
         });
         if (item.type === 0) {
-          console.log('get item: point');
           this.score += 150;
-          // Show text display
+          // Show text display??
         } else if (item.type === 1) {
-          console.log('get item: smallpoint');
           this.score += 50;
         } else if (item.type === 2) {
-          console.log('get item: powerup');
           this.player.stats.power += 0.125;
         } else if (item.type === 3) {
-          console.log('get item: life');
           if (this.player.stats.life < 3) this.player.stats.life += 1;
         }
       }
@@ -119,6 +119,7 @@ class Game {
       enemy.logic(ctx, this.dt);
       // Collision and dead check
       if (enemy.dead) {
+        this.spawnerCount++;
         this.score += 100;
         explosion({
           x: enemy.x + enemy.width / 2,
@@ -134,7 +135,6 @@ class Game {
           this.isBossStage = false;
           setTimeout(() => this.addEnemy(), 0);
           // Add in particles and item drops
-          console.log('add spawn life here');
           shockwave({
             x: enemy.x + enemy.width / 2,
             y: enemy.y + enemy.height / 2,
@@ -152,7 +152,7 @@ class Game {
           });
           lifeup({
             x: enemy.x + enemy.width / 2,
-            y: enemy.y - 100,
+            y: enemy.y + enemy.height / 2,
             size: 40,
             amount: 1,
             itemArr: this.items,
@@ -204,6 +204,29 @@ class Game {
       amount: 1,
       particleArr: this.particles,
     });
+    this.spawnLogic();
+  }
+  spawnLogic() {
+    if (this.spawnTimerCur >= this.spawnTimer) {
+      this.spawnTimerCur = 0;
+      this.addEnemy();
+    } else this.spawnTimerCur++;
+    if (this.spawnTimerCur % 100 === 0) console.log(this.spawnTimerCur);
+    if (this.spawnerPoolTimer.length > 0) {
+      if (this.spawnerCount >= this.spawnerPoolTimer.length) {
+        this.spawnerCount = 0;
+        this.spawnTimerCur = this.spawnTimer;
+        return;
+      }
+      const indexes = this.spawnerPoolTimer
+        .map((n, i) => (n === this.spawnTimerCur ? i : -1))
+        .filter((i) => i > -1);
+      for (const index of indexes) {
+        this.enemies.push(this.spawnerPool[index]);
+        if (this.spawnerPool[index] instanceof Boss) this.showWarning = false;
+        console.log('spawn enemy', index);
+      }
+    }
   }
   addEnemy() {
     this.wave++;
@@ -216,12 +239,17 @@ class Game {
       this.stage++;
       if (!stages[this.stage]) this.stage--; // Stuck at last stage if none more found
       this.enemyWavePattern = stages[this.stage];
-      setTimeout(() => this.addEnemy(), 5000); // Next wave at atleast 5 seconds delay after boss battle
       return;
     }
+    this.spawnTimer = Math.floor(wave.waveDuration / this.spawnerDivideTimer);
     if (boss) {
+      this.spawnerPool.length = 0;
+      this.spawnerPoolTimer.length = 0;
       this.addBoss(wave);
+      this.spawnTimer = 100000; // Set high number
     } else {
+      this.spawnerPool.length = 0;
+      this.spawnerPoolTimer.length = 0;
       for (let i = 0; i < wave.spawner.length; i++) {
         const pos = wave.spawner[i].pos;
         const enemyIndex = wave.spawner[i].enemyIndex;
@@ -240,38 +268,33 @@ class Game {
           ei.hp,
           ei.reverse || false
         );
-        setTimeout(() => {
-          this.enemies.push(newEnemy);
-        }, timer);
-        timer += timeToSpawn;
+        this.spawnerPool.push(newEnemy);
+        this.spawnerPoolTimer.push(timer);
+        timer += Math.floor(timeToSpawn / this.spawnerDivideTimer);
       }
-      // Start timer for next wave
-      setTimeout(() => this.addEnemy(), wave.waveDuration);
     }
   }
   // Add boss
   addBoss(wave: any) {
     this.showWarning = true;
     this.isBossStage = true;
-    setTimeout(() => {
-      this.showWarning = false;
-      const pos = wave.spawner[0].pos;
-      const enemyIndex = wave.spawner[0].enemyIndex;
-      const ei = wave.enemies[enemyIndex];
-      const newEnemy = new Boss(
-        pos.x || ei.x,
-        pos.y || ei.y,
-        ei.width,
-        ei.height,
-        ei.color,
-        this.bullets,
-        this.player,
-        ei.bulletType,
-        ei.behaviour ? ei.behaviour() : undefined,
-        ei.hp
-      );
-      this.enemies.push(newEnemy);
-    }, 6100);
+    const pos = wave.spawner[0].pos;
+    const enemyIndex = wave.spawner[0].enemyIndex;
+    const ei = wave.enemies[enemyIndex];
+    const newEnemy = new Boss(
+      pos.x || ei.x,
+      pos.y || ei.y,
+      ei.width,
+      ei.height,
+      ei.color,
+      this.bullets,
+      this.player,
+      ei.bulletType,
+      ei.behaviour ? ei.behaviour() : undefined,
+      ei.hp
+    );
+    this.spawnerPool.push(newEnemy);
+    this.spawnerPoolTimer.push(Math.floor(6100 / this.spawnerDivideTimer));
   }
 }
 export default Game;

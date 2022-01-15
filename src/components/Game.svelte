@@ -51,16 +51,16 @@
 				scroll.y += ((player.y - scroll.y - 320) / 100)*(game.dt || 1);
 				// Limit scroll view to the map on x and y coordinates, snaps to place
 				if (scroll.x > -5) scroll.x = -5;
-				else if (scroll.x < -200) scroll.x = -200
+				else if (scroll.x < -200) scroll.x = -200;
 				if (scroll.y < -100) scroll.y = -100;
 				else if (scroll.y > 0) scroll.y = 0;
-				bg.style.transform = `translate(${scroll.x}px, ${scroll.y}px)`
+				bg.style.transform = `translate(${scroll.x}px, ${scroll.y}px)`;
 
 				// Rocks
 				for (let i=rocks.length - 1; i>=0; i--) {
 					const rock = rocks[i];
 					rock.x -= rock.speed;
-					if (rock.x < -250) rock.x = Math.random()*rock.width + 1100
+					if (rock.x < -250) rock.x = Math.random()*rock.width + 1100;
 				}
 
 				// Scrolling parallax sky
