@@ -3,7 +3,7 @@
 	import Game from '../game';
 	import {CANVAS_WIDTH, CANVAS_HEIGHT} from "../constants"
 	import { shockwave } from '../particle';
-	import { lifeup } from '../item';
+	import { powerup, lifeup } from '../item';
 	import Rocks from './Rocks.svelte';
 	import Warning from './Warning.svelte';
 
@@ -99,6 +99,7 @@
 		// Particle and item tests
 		else if (event.key === 'c') shockwave({x: 450, y: 300, size: 30, amount: 30, particleArr: game.particles});
 		else if (event.key === 'v') lifeup({x: 450, y: 300, size: 40, amount: 1, itemArr: game.items});
+		else if (event.key === 'e') powerup({x: 450, y: 300, size: 40, amount: 1, itemArr: game.items});
 		event.preventDefault();
 	};
 	const getRockData = (rock: any, scroll: any) => {

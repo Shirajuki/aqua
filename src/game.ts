@@ -5,11 +5,11 @@ import type Bullet from './bullet';
 import * as bp from './lib/bulletPatterns';
 import type Particle from './particle';
 import type Item from './item';
-import { explosion, ripple, shockwave } from './particle';
+import { explosion, glitters, ripple, shockwave } from './particle';
 import { point, smallPoint, powerup, lifeup } from './item';
 import { testLogic } from './lib/behaviourLogics';
 import stages from './stages';
-import { CANVAS_WIDTH, CANVAS_HEIGHT } from './constants';
+import { CANVAS_HEIGHT } from './constants';
 
 class Game {
   state: number;
@@ -50,7 +50,7 @@ class Game {
     this.enemies = [];
 
     this.enemyWavePattern = stages[this.stage];
-    if (this.enemies.length === 0) setTimeout(() => this.addEnemy(), 2000);
+    //if (this.enemies.length === 0) setTimeout(() => this.addEnemy(), 2000);
   }
   draw(ctx: any) {
     // Enemy bullets
@@ -89,6 +89,14 @@ class Game {
       if (item.outOfRange) this.items.splice(i, 1);
       if (this.player.collisionSprite(item)) {
         this.items.splice(i, 1);
+        // Spawn glitter effect
+        glitters({
+          x: this.player.x,
+          y: this.player.y - 20,
+          size: 4,
+          amount: 12,
+          particleArr: this.particles,
+        });
         if (item.type === 0) {
           console.log('get item: point');
           this.score += 150;

@@ -43,6 +43,7 @@
 			})
 		});
 		select(1);
+		btnStart.click(); // Auto start trigger
 	});
 
 	document.onkeyup = (event) => {

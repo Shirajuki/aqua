@@ -1,17 +1,11 @@
 import Bullet from './bullet';
+import { getRGBColor } from './utils';
 import { lerp } from './utils';
+import { GLITTERS_COLORS } from './constants';
 
-const getRGBColor = (color: string) => {
-  if (color[0] === '#') {
-    const r = parseInt(color.substring(1, 3), 16);
-    const g = parseInt(color.substring(3, 5), 16);
-    const b = parseInt(color.substring(5, 7), 16);
-    return `${r}, ${g}, ${b}`;
-  }
-  return color;
-};
 export default class Particle extends Bullet {
   lifeTime: number = 0;
+  lifeTimeDrain: number = 0.01;
   friction: number = 0;
   constructor(
     x: number,
@@ -21,12 +15,13 @@ export default class Particle extends Bullet {
     color: string,
     velocity: number[],
     acceleration: number[],
-    lifeTime: number
+    lifeTime: number,
+    lifeTimeDrain: number = 0.01
   ) {
     super(x, y, width, height, color, velocity, acceleration);
     this.lifeTime = lifeTime;
+    this.lifeTimeDrain = lifeTimeDrain;
     this.friction = 0.96;
-    this.color = color;
   }
   move() {
     this.velocity[0] *= this.friction;
@@ -42,7 +37,7 @@ export default class Particle extends Bullet {
   }
   draw(ctx: any) {
     if (this.lifeTime !== 0) {
-      this.lifeTime -= 0.01;
+      this.lifeTime -= this.lifeTimeDrain;
     }
     this.width = lerp(this.width, 0, 0.005);
     ctx.beginPath();
@@ -103,6 +98,7 @@ export class Shockwave extends Particle {
     ctx.stroke();
   }
 }
+// Enemy explosion particle effect
 export const explosion = ({
   x,
   y,
@@ -128,6 +124,8 @@ export const explosion = ({
     );
   }
 };
+
+// Player water ripple particle effect
 export const ripple = ({
   x,
   y,
@@ -145,12 +143,14 @@ export const ripple = ({
         size,
         '#ffffff',
         [speed, 0],
-        [-1, 1],
+        [-1.2, 1],
         0.4
       )
     );
   }
 };
+
+// Boss explosion particle effect
 export const shockwave = ({
   x,
   y,
@@ -177,4 +177,31 @@ export const shockwave = ({
   particleArr.push(
     new Shockwave(x, y, size, size, '#ffffff', [0, 0], [0.5, 0], 0.4)
   );
+};
+
+// Item pickup particle effect
+export const glitters = ({
+  x,
+  y,
+  size,
+  amount,
+  particleArr,
+  speed: spd,
+}: IParticlePattern) => {
+  for (let i = 1; i <= amount; i++) {
+    const speed = Math.random() * (spd || 7);
+    let angle = Math.random() * Math.PI * -1;
+    particleArr.push(
+      new Particle(
+        x,
+        y,
+        Math.random() * size + 3,
+        size,
+        GLITTERS_COLORS[Math.floor(Math.random() * GLITTERS_COLORS.length)],
+        [speed, angle],
+        [-1, (Math.random() * 60) / 100],
+        0.5
+      )
+    );
+  }
 };
