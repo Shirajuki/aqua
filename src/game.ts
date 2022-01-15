@@ -6,7 +6,7 @@ import * as bp from './lib/bulletPatterns';
 import type Particle from './particle';
 import type Item from './item';
 import { explosion, ripple, shockwave } from './particle';
-import { point, smallPoint, powerup } from './item';
+import { point, smallPoint, powerup, lifeup } from './item';
 import { testLogic } from './lib/behaviourLogics';
 import stages from './stages';
 
@@ -100,6 +100,7 @@ class Game {
           this.player.stats.power += 0.125;
         } else if (item.type === 3) {
           console.log('get item: life');
+          if (this.player.stats.life < 3) this.player.stats.life += 1;
         }
       }
     }
@@ -139,6 +140,13 @@ class Game {
             amount: 20,
             itemArr: this.items,
             player: this.player,
+          });
+          lifeup({
+            x: enemy.x + enemy.width / 2,
+            y: enemy.y - 100,
+            size: 40,
+            amount: 1,
+            itemArr: this.items,
           });
         }
         // 1/8 chance of powerup drop

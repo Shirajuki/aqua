@@ -23,6 +23,7 @@ export default class Item extends Particle {
     super(x, y, width, height, color, velocity, acceleration, lifeTime);
     this.type = type;
     if (this.type === 2) this.color = 'teal';
+    if (this.type === 3) this.color = 'tomato';
   }
   move() {
     this.velocity[0] *= this.friction;
@@ -150,6 +151,27 @@ export const powerup = ({ x, y, size, amount, itemArr }: IItemPattern) => {
         [-5, 0],
         1,
         2
+      )
+    );
+  }
+};
+
+export const lifeup = ({ x, y, size, amount, itemArr }: IItemPattern) => {
+  const speed = 15;
+  for (let i = 0; i < amount; i++) {
+    const offsetX = Math.random() * 60 - 30;
+    const offsetY = Math.random() * 40 - 20;
+    itemArr.push(
+      new Item(
+        x + offsetX,
+        y + offsetY + i * 20 - 10,
+        size,
+        size,
+        '#ffffff',
+        [speed, 0],
+        [-5, 0],
+        1,
+        3
       )
     );
   }
