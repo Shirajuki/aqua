@@ -30,6 +30,7 @@ class Game {
   score: number = 0;
   showWarning: boolean = false;
   isBossStage: boolean = false;
+
   // Framerate independence using timestamps
   dt: number = 1; // initial value to 1
   constructor() {
@@ -108,6 +109,18 @@ class Game {
           this.score += 50;
         } else if (item.type === 2) {
           this.player.stats.power += 0.125;
+          if (
+            Math.floor(this.player.stats.power) !==
+            Math.floor(this.player.stats.power - 0.125)
+          )
+            shockwave({
+              x: this.player.x - 10,
+              y: this.player.y,
+              size: 20,
+              amount: 1,
+              particleArr: this.particles,
+              lifeTime: 0.22,
+            });
         } else if (item.type === 3) {
           if (this.player.stats.life < 3) this.player.stats.life += 1;
         }
@@ -204,7 +217,7 @@ class Game {
       amount: 1,
       particleArr: this.particles,
     });
-    this.spawnLogic();
+    // this.spawnLogic();
   }
   spawnLogic() {
     if (this.spawnTimerCur >= this.spawnTimer) {

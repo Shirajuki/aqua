@@ -157,6 +157,7 @@ export const shockwave = ({
   size,
   amount,
   particleArr,
+  lifeTime = 0.4,
 }: IParticlePattern) => {
   for (let i = 1; i <= amount; i++) {
     const speed = Math.random() * 3;
@@ -175,7 +176,7 @@ export const shockwave = ({
     );
   }
   particleArr.push(
-    new Shockwave(x, y, size, size, '#ffffff', [0, 0], [0.5, 0], 0.4)
+    new Shockwave(x, y, size, size, '#ffffff', [0, 0], [0.5, 0], lifeTime)
   );
 };
 

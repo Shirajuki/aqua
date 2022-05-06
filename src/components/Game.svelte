@@ -48,7 +48,7 @@
 				
 				// Camera & background
 				scroll.x += ((-player.x - scroll.x + 200) / 150)*(game.dt || 1);
-				scroll.y += ((player.y - scroll.y - 320) / 100)*(game.dt || 1);
+				scroll.y += ((player.y - scroll.y - 320) / 70)*(game.dt || 1);
 				// Limit scroll view to the map on x and y coordinates, snaps to place
 				if (scroll.x > -5) scroll.x = -5;
 				else if (scroll.x < -200) scroll.x = -200;

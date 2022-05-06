@@ -52,6 +52,7 @@ interface IParticlePattern {
   amount: number;
   particleArr: Particle[];
   speed?: number;
+  lifeTime?: number;
 }
 // Item interface
 interface IItemPattern {
